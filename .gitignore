@@ -1,0 +1,9 @@
+__pycache__/
+*.egg-info/
+.venv/
+dist/
+site/
+node_modules/
+.e2e-site/
+test-results/
+docs/superpowers/
