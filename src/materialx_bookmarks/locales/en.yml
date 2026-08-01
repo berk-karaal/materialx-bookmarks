@@ -2,7 +2,6 @@ search_placeholder: Search bookmarks
 no_results: No bookmarks found
 result_count: "{shown} of {total} bookmarks"
 all_tags: All
-sort_default: Default
-sort_reversed: Reversed
+sort_reverse: Reverse order
 prev_page: Previous
 next_page: Next

@@ -24,9 +24,15 @@ test("search, filter, sort, and paginate a collection", async ({ page }) => {
   await expect(page).toHaveURL(/reading\.q=ripgrap/);
 
   await page.locator(".mxb__search").fill("");
-  await page.locator(".mxb__sort").selectOption("reversed");
+  await page.locator(".mxb__sort").click();
   await expect(items.first().locator(".mxb__title")).toHaveText("Plain note");
+  await expect(page.locator(".mxb__sort")).toHaveAttribute("aria-pressed", "true");
   await expect(page).toHaveURL(/reading\.sort=reversed/);
+
+  await page.locator(".mxb__sort").click();
+  await expect(items.first().locator(".mxb__title")).toHaveText("Ruff");
+  await expect(page.locator(".mxb__sort")).toHaveAttribute("aria-pressed", "false");
+  await expect(page).not.toHaveURL(/reading\.sort=/);
 
   await page.locator(".mxb__search").fill("zzzzzzzz");
   await expect(page.locator(".mxb__empty")).toBeVisible();

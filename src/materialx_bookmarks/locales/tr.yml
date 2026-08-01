@@ -2,7 +2,6 @@ search_placeholder: Yer işaretlerinde ara
 no_results: Yer işareti bulunamadı
 result_count: "{total} yer işaretinden {shown} tanesi"
 all_tags: Tümü
-sort_default: Varsayılan
-sort_reversed: Ters
+sort_reverse: Sırayı ters çevir
 prev_page: Önceki
 next_page: Sonraki

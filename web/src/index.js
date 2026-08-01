@@ -35,7 +35,7 @@ function mount(root, config, data) {
     state = { ...state, page: view.page };
 
     nodes.search.value = state.q;
-    nodes.sort.value = state.sort;
+    nodes.sort.setAttribute("aria-pressed", String(state.sort === "reversed"));
     renderChips(nodes.chips, data.tags, counts, state.tags, labels);
     renderCount(nodes.count, view.visible.length, view.total, labels);
     renderList(nodes.list, view.visible, labels);
@@ -53,8 +53,8 @@ function mount(root, config, data) {
     }, DEBOUNCE_MS);
   });
 
-  nodes.sort.addEventListener("change", (event) => {
-    state = { ...state, sort: event.target.value, page: 1 };
+  nodes.sort.addEventListener("click", () => {
+    state = { ...state, sort: state.sort === "reversed" ? "default" : "reversed", page: 1 };
     persist();
     draw();
   });

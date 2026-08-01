@@ -8,8 +8,7 @@ KEYS = {
     "no_results",
     "result_count",
     "all_tags",
-    "sort_default",
-    "sort_reversed",
+    "sort_reverse",
     "prev_page",
     "next_page",
 }

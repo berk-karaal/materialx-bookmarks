@@ -25,6 +25,27 @@ test("renders under the materialx theme without console errors", async ({ page }
   expect(errors).toEqual([]);
 });
 
+test("theme typeset styles do not leak into the list", async ({ page }) => {
+  await page.goto("/tools/");
+  const item = page.locator(".mxb__item").first();
+
+  await expect(item).toHaveCSS("list-style-type", "none");
+  await expect(page.locator(".mxb__list")).toHaveCSS("padding-left", "0px");
+});
+
+test("sort toggles with a single icon button", async ({ page }) => {
+  await page.goto("/tools/");
+  const sort = page.locator(".mxb__sort");
+
+  await expect(sort).toHaveAttribute("aria-pressed", "false");
+  await expect(sort).toHaveAttribute("aria-label", "Reverse order");
+
+  await sort.click();
+
+  await expect(sort).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".mxb__item").first().locator(".mxb__title")).toHaveText("HTTPie");
+});
+
 test("two components on one page keep separate state", async ({ page }) => {
   await page.goto("/multiple/");
 

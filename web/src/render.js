@@ -1,3 +1,8 @@
+const SORT_ICON =
+  '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+  '<path fill="currentColor" d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>' +
+  "</svg>";
+
 function element(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -14,17 +19,12 @@ export function buildShell(root, labels) {
   search.placeholder = labels.search_placeholder;
   search.setAttribute("aria-label", labels.search_placeholder);
 
-  const sort = element("select", "mxb__sort");
-  sort.setAttribute("aria-label", labels.sort_default);
-  for (const value of ["default", "reversed"]) {
-    const option = element(
-      "option",
-      null,
-      value === "default" ? labels.sort_default : labels.sort_reversed,
-    );
-    option.value = value;
-    sort.append(option);
-  }
+  const sort = element("button", "mxb__sort");
+  sort.type = "button";
+  sort.title = labels.sort_reverse;
+  sort.setAttribute("aria-label", labels.sort_reverse);
+  sort.setAttribute("aria-pressed", "false");
+  sort.innerHTML = SORT_ICON;
 
   controls.append(search, sort);
 
