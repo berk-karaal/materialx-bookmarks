@@ -1,0 +1,24 @@
+tags:
+  - python
+  - rust
+  - ai
+
+bookmarks:
+  - title: Ruff
+    url: https://astral.sh/ruff
+    description: Fast Python linter
+    tags: [python]
+  - title: uv
+    url: https://astral.sh/uv
+    description: Python package manager
+    tags: [python]
+  - title: ripgrep
+    url: https://github.com/BurntSushi/ripgrep
+    description: Fast recursive search
+    tags: [rust]
+  - title: Fuse.js
+    url: https://fusejs.io
+    description: Fuzzy search library
+    tags: [ai]
+  - title: Plain note
+    tags: [ai]

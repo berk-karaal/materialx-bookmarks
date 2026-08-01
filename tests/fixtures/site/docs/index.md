@@ -1,0 +1,5 @@
+# Fixture
+
+```bookmarks
+collection: reading
+```

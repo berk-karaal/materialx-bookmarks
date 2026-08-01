@@ -1,0 +1,9 @@
+site_name: Fixture
+theme:
+  name: mkdocs
+plugins:
+  - materialx-bookmarks:
+      collections:
+        - name: reading
+          file: bookmarks/reading.yml
+          per_page: 2
