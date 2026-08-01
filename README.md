@@ -9,10 +9,9 @@ sorting and pagination — no JavaScript to write, no database, no build step of
 > Search for a typo'd name, stack two tag filters, flip the order, page through — then copy the
 > address bar and see the whole view come back.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshot-dark.png">
-  <img alt="A bookmark collection rendered on a documentation page: a search box, tag chips with counts, a result count, a list of linked bookmarks with descriptions and tags, and centered pagination." src=".github/assets/screenshot-light.png">
-</picture>
+| Light | Dark |
+| :---: | :---: |
+| <img width="100%" alt="A bookmark collection on a documentation page in the light theme: a search box, tag chips with counts, the git chip active, a result count reading 3 of 3 bookmarks, three linked bookmarks with descriptions and tags, and centered pagination." src=".github/assets/screenshot-light.png"> | <img width="100%" alt="The same bookmark collection in the dark theme, inheriting the theme's colours." src=".github/assets/screenshot-dark.png"> |
 
 ---
 
