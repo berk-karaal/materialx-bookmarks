@@ -102,8 +102,8 @@ export function renderCount(node, shown, total, labels) {
 export function renderPagination(container, page, pageCount, labels) {
   container.textContent = "";
 
-  const button = (label, target, disabled, current) => {
-    const node = element("button", "mxb__page", label);
+  const button = (label, target, disabled, current, modifier) => {
+    const node = element("button", `mxb__page mxb__page--${modifier}`, label);
     node.type = "button";
     node.dataset.page = String(target);
     node.disabled = disabled;
@@ -111,11 +111,11 @@ export function renderPagination(container, page, pageCount, labels) {
     return node;
   };
 
-  container.append(button(labels.prev_page, page - 1, page <= 1, false));
+  container.append(button(labels.prev_page, page - 1, page <= 1, false, "prev"));
   for (let index = 1; index <= pageCount; index += 1) {
-    container.append(button(String(index), index, false, index === page));
+    container.append(button(String(index), index, false, index === page, "number"));
   }
-  container.append(button(labels.next_page, page + 1, page >= pageCount, false));
+  container.append(button(labels.next_page, page + 1, page >= pageCount, false, "next"));
 }
 
 export function renderError(root, message) {
