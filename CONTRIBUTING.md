@@ -1,0 +1,29 @@
+# Contributing
+
+## Development
+
+```bash
+uv sync
+uv run pytest
+
+cd web
+npm install
+npm test
+npm run build
+
+npx playwright test
+```
+
+`npm run build` writes the bundle into `src/materialx_bookmarks/assets/`. Commit that output —
+building a wheel must never require Node.
+
+## Adding a language
+
+Copy `src/materialx_bookmarks/locales/en.yml` to `src/materialx_bookmarks/locales/<code>.yml` and
+translate the values. Nothing else needs to change: the plugin discovers locale files at runtime and
+resolves strings at build time.
+
+Keep `{shown}` and `{total}` intact in `result_count`. A key you leave out falls back to English and
+logs a build warning.
+
+Run `uv run pytest tests/test_locales.py` — one test asserts every locale carries every key.
