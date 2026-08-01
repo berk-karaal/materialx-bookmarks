@@ -17,9 +17,24 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-CI runs these three suites on every push to `main` and every pull request
+CI runs these suites on every push to `main` and every pull request
 (`.github/workflows/tests.yml`). The `web` job also rebuilds the bundle and fails if it differs
 from the committed one, so remember to commit `npm run build` output alongside `web/src` changes.
+
+## The demo site
+
+`demo/` is a real mkdocs-materialx site using the plugin. It is published to GitHub Pages from
+`main` by `.github/workflows/demo.yml`.
+
+```bash
+uv sync --group demo
+uv run --group demo mkdocs serve -f demo/mkdocs.yml
+```
+
+`npm run test:demo` builds `demo/mkdocs.local.yml` — the same site with `site_url` pointed at the
+test server — and runs `tests/e2e-demo/` against it. That override matters: the theme's
+`navigation.instant` only intercepts links matching `site_url`, so without it the tests would
+silently exercise ordinary page loads and miss instant-navigation regressions.
 
 `npm run build` writes the bundle into `src/materialx_bookmarks/assets/`. Commit that output —
 building a wheel must never require Node.

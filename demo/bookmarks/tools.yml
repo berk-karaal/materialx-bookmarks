@@ -1,0 +1,83 @@
+tags:
+  - cli
+  - python
+  - rust
+  - editor
+  - git
+  - search
+
+bookmarks:
+  - title: Ruff
+    url: https://docs.astral.sh/ruff/
+    description: Linter and formatter for Python, written in Rust.
+    tags: [python, rust]
+
+  - title: uv
+    url: https://docs.astral.sh/uv/
+    description: Python package and project manager that replaces pip, venv and pip-tools.
+    tags: [python, rust]
+
+  - title: ripgrep
+    url: https://github.com/BurntSushi/ripgrep
+    description: Recursively searches directories for a regex pattern, respecting gitignore rules.
+    tags: [cli, rust, search]
+
+  - title: fd
+    url: https://github.com/sharkdp/fd
+    description: A simpler, faster alternative to find.
+    tags: [cli, rust, search]
+
+  - title: bat
+    url: https://github.com/sharkdp/bat
+    description: A cat clone with syntax highlighting and git integration.
+    tags: [cli, rust]
+
+  - title: fzf
+    url: https://github.com/junegunn/fzf
+    description: General purpose command-line fuzzy finder.
+    tags: [cli, search]
+
+  - title: jq
+    url: https://jqlang.github.io/jq/
+    description: Command-line JSON processor with its own query language.
+    tags: [cli]
+
+  - title: delta
+    url: https://github.com/dandavison/delta
+    description: Syntax-highlighting pager for git, diff and grep output.
+    tags: [cli, git, rust]
+
+  - title: lazygit
+    url: https://github.com/jesseduffield/lazygit
+    description: Terminal UI for git commands.
+    tags: [cli, git]
+
+  - title: tig
+    url: https://jonas.github.io/tig/
+    description: Text-mode interface for git that works as a repository browser and pager.
+    tags: [cli, git]
+
+  - title: Helix
+    url: https://helix-editor.com/
+    description: Modal text editor with tree-sitter and language server support built in.
+    tags: [editor, rust]
+
+  - title: Neovim
+    url: https://neovim.io/
+    description: Vim fork focused on extensibility and usability.
+    tags: [editor]
+
+  - title: zoxide
+    url: https://github.com/ajeetdsouza/zoxide
+    description: A smarter cd that learns the directories you use most.
+    tags: [cli, rust]
+
+  - title: hyperfine
+    url: https://github.com/sharkdp/hyperfine
+    description: Command-line benchmarking tool with statistical output.
+    tags: [cli, rust]
+
+  - title: HTTPie
+    url: https://httpie.io/cli
+    description: Human-friendly command-line HTTP client.
+    tags: [cli, python]

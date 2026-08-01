@@ -1,0 +1,81 @@
+tags:
+  - docs
+  - spec
+  - book
+  - python
+  - web
+
+bookmarks:
+  - title: MDN Web Docs
+    url: https://developer.mozilla.org/
+    description: Reference for HTML, CSS, JavaScript and browser APIs.
+    tags: [docs, web]
+
+  - title: Python documentation
+    url: https://docs.python.org/3/
+    description: The language reference, standard library and tutorial.
+    tags: [docs, python]
+
+  - title: MkDocs
+    url: https://www.mkdocs.org/
+    description: Static site generator geared towards project documentation.
+    tags: [docs, web]
+
+  - title: Material for MkDocs
+    url: https://squidfunk.github.io/mkdocs-material/
+    description: The theme mkdocs-materialx forked from, and still the best reference for its features.
+    tags: [docs, web]
+
+  - title: Fuse.js
+    url: https://fusejs.io/
+    description: Lightweight fuzzy search library, used by this plugin for the search box.
+    tags: [docs, web]
+
+  - title: esbuild
+    url: https://esbuild.github.io/
+    description: JavaScript bundler used to build this plugin's browser bundle.
+    tags: [docs, web]
+
+  - title: Playwright
+    url: https://playwright.dev/
+    description: Browser automation and end-to-end testing framework.
+    tags: [docs, web]
+
+  - title: pytest
+    url: https://docs.pytest.org/
+    description: Testing framework for Python.
+    tags: [docs, python]
+
+  - title: The Rust Programming Language
+    url: https://doc.rust-lang.org/book/
+    description: The official book, free to read online.
+    tags: [book]
+
+  - title: Crafting Interpreters
+    url: https://craftinginterpreters.com/
+    description: Bob Nystrom builds two complete interpreters, one tree-walking and one bytecode.
+    tags: [book]
+
+  - title: Designing Data-Intensive Applications
+    url: https://dataintensive.net/
+    description: Martin Kleppmann on storage, replication, consistency and stream processing.
+    tags: [book]
+
+  - title: RFC 9110 — HTTP Semantics
+    url: https://www.rfc-editor.org/rfc/rfc9110.html
+    description: The current definition of HTTP methods, status codes and header fields.
+    tags: [spec]
+
+  - title: WCAG 2.2
+    url: https://www.w3.org/TR/WCAG22/
+    description: Web Content Accessibility Guidelines, the reference for accessible interfaces.
+    tags: [spec]
+
+  - title: CommonMark
+    url: https://spec.commonmark.org/
+    description: A strongly specified, highly compatible dialect of Markdown.
+    tags: [spec]
+
+  - title: Read the WCAG quick reference before shipping a new component
+    description: A reminder rather than a link — bookmarks without a url render as plain text.
+    tags: [spec]

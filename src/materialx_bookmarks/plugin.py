@@ -46,6 +46,7 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
             for name, payload in self.payloads.items()
         }
         self.pages_with_bookmarks: set[str] = set()
+        self.inject_everywhere = _uses_instant_navigation(config)
         return config
 
     def on_files(self, files, config):
@@ -77,7 +78,7 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
         return output
 
     def on_post_page(self, output, page, config):
-        if page.file.src_uri not in self.pages_with_bookmarks:
+        if not self.inject_everywhere and page.file.src_uri not in self.pages_with_bookmarks:
             return output
         css = get_relative_url(CSS_URI, page.url)
         js = get_relative_url(JS_URI, page.url)
@@ -106,3 +107,11 @@ def _theme_language(config) -> str | None:
         return config["theme"]["language"]
     except KeyError:
         return None
+
+
+def _uses_instant_navigation(config) -> bool:
+    try:
+        features = config["theme"]["features"]
+    except KeyError:
+        return False
+    return "navigation.instant" in (features or [])

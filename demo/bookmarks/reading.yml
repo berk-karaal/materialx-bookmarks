@@ -1,0 +1,66 @@
+tags:
+  - engineering
+  - systems
+  - writing
+  - career
+
+bookmarks:
+  - title: The Pragmatic Engineer
+    url: https://blog.pragmaticengineer.com/
+    description: Gergely Orosz on how software teams at large tech companies actually work.
+    tags: [engineering, career]
+
+  - title: Julia Evans
+    url: https://jvns.ca/
+    description: Debugging, networking and systems internals explained from first principles.
+    tags: [engineering, writing]
+
+  - title: Dan Luu
+    url: https://danluu.com/
+    description: Data-driven essays on performance, reliability and engineering culture.
+    tags: [engineering, systems]
+
+  - title: Simon Willison
+    url: https://simonwillison.net/
+    description: Daily notes on web engineering, SQLite and language models.
+    tags: [engineering, writing]
+
+  - title: Martin Kleppmann
+    url: https://martin.kleppmann.com/
+    description: Research and writing on distributed systems and local-first software.
+    tags: [systems]
+
+  - title: Brendan Gregg
+    url: https://www.brendangregg.com/
+    description: Systems performance analysis, flame graphs and observability methodology.
+    tags: [systems]
+
+  - title: Hillel Wayne
+    url: https://hillelwayne.com/
+    description: Formal methods, correctness and what software engineering can learn from other trades.
+    tags: [engineering, writing]
+
+  - title: rachelbythebay
+    url: https://rachelbythebay.com/w/
+    description: War stories from operations, on-call and systems that fail in interesting ways.
+    tags: [systems]
+
+  - title: charity.wtf
+    url: https://charity.wtf/
+    description: Charity Majors on observability, on-call health and engineering management.
+    tags: [engineering, career]
+
+  - title: Irrational Exuberance
+    url: https://lethain.com/
+    description: Will Larson on engineering strategy, org design and technical leadership.
+    tags: [career]
+
+  - title: fasterthanlime
+    url: https://fasterthanli.me/
+    description: Long-form deep dives into Rust, Linux and how things work underneath.
+    tags: [engineering, systems]
+
+  - title: Made of Bugs
+    url: https://blog.nelhage.com/
+    description: Nelson Elhage on debugging, build systems and performance work.
+    tags: [engineering, systems]

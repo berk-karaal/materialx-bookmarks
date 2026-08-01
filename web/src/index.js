@@ -86,6 +86,9 @@ function mount(root, config, data) {
 
 function init() {
   for (const root of document.querySelectorAll(".mxb")) {
+    if (root.dataset.mxbReady) continue;
+    root.dataset.mxbReady = "1";
+
     const config = parseConfig(root);
     fetchCollection(config.url)
       .then((data) => mount(root, config, data))
@@ -93,7 +96,9 @@ function init() {
   }
 }
 
-if (document.readyState === "loading") {
+if (typeof window.document$?.subscribe === "function") {
+  window.document$.subscribe(init);
+} else if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
   init();

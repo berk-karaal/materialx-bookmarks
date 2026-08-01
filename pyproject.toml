@@ -18,6 +18,7 @@ packages = ["src/materialx_bookmarks"]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6"]
+demo = ["mkdocs-materialx>=10.2"]
 
 [tool.ruff]
 line-length = 100

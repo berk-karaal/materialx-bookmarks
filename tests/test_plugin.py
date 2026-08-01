@@ -80,6 +80,18 @@ def test_injects_assets_only_into_pages_with_a_fence(site):
     assert "bookmarks.js" not in (output / "plain" / "index.html").read_text()
 
 
+def test_injects_assets_everywhere_when_instant_navigation_is_on(site):
+    (site / "docs" / "plain.md").write_text("# Plain\n\nNothing here.\n")
+    config_text = (site / "mkdocs.yml").read_text()
+    (site / "mkdocs.yml").write_text(
+        config_text.replace("  name: mkdocs", "  name: mkdocs\n  features:\n    - navigation.instant")
+    )
+
+    output = build_site(site)
+
+    assert "bookmarks.js" in (output / "plain" / "index.html").read_text()
+
+
 def test_turkish_labels_come_from_the_theme_language(site):
     config_text = (site / "mkdocs.yml").read_text()
     (site / "mkdocs.yml").write_text(

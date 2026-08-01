@@ -1,0 +1,51 @@
+site_name: materialx-bookmarks
+site_description: Demo site for the materialx-bookmarks plugin
+site_url: https://berk-karaal.github.io/materialx-bookmarks/
+
+theme:
+  name: materialx
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.top
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Tools: tools.md
+  - Reading: reading.md
+  - Learning: learning.md
+  - Two on one page: multiple.md
+  - About: about.md
+
+plugins:
+  - materialx-bookmarks:
+      collections:
+        - name: tools
+          file: bookmarks/tools.yml
+          per_page: 6
+        - name: reading
+          file: bookmarks/reading.yml
+          per_page: 5
+        - name: learning
+          file: bookmarks/learning.yml
+          per_page: 8
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
