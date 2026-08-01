@@ -1,5 +1,6 @@
 import html
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -42,11 +43,35 @@ def test_emits_collection_json(site):
     assert "url" not in payload["items"][-1]
 
 
-def test_emits_the_assets(site):
+def test_emits_the_assets_with_hashed_names(site):
     output = build_site(site)
+    assets = output / "assets" / "bookmarks"
 
-    assert (output / "assets" / "bookmarks" / "bookmarks.js").is_file()
-    assert (output / "assets" / "bookmarks" / "bookmarks.css").is_file()
+    js = list(assets.glob("bookmarks.*.js"))
+    css = list(assets.glob("bookmarks.*.css"))
+
+    assert len(js) == 1
+    assert len(css) == 1
+    assert re.fullmatch(r"bookmarks\.[0-9a-f]{8}\.js", js[0].name)
+    assert re.fullmatch(r"bookmarks\.[0-9a-f]{8}\.css", css[0].name)
+    assert js[0].name in (output / "index.html").read_text()
+    assert css[0].name in (output / "index.html").read_text()
+
+
+def test_asset_name_changes_when_the_bundle_changes(site, tmp_path, monkeypatch):
+    import materialx_bookmarks.plugin as plugin
+
+    before = list(build_site(site).glob("assets/bookmarks/bookmarks.*.js"))[0].name
+
+    fake_assets = tmp_path / "assets"
+    fake_assets.mkdir()
+    (fake_assets / "bookmarks.css").write_text("/* changed */")
+    (fake_assets / "bookmarks.js").write_text("console.debug('changed');")
+    monkeypatch.setattr(plugin, "ASSETS_DIR", fake_assets)
+
+    after = list(build_site(site).glob("assets/bookmarks/bookmarks.*.js"))[0].name
+
+    assert before != after
 
 
 def test_replaces_the_fence_with_a_container(site):
@@ -76,8 +101,8 @@ def test_injects_assets_only_into_pages_with_a_fence(site):
 
     output = build_site(site)
 
-    assert "bookmarks.js" in (output / "index.html").read_text()
-    assert "bookmarks.js" not in (output / "plain" / "index.html").read_text()
+    assert "bookmarks." in (output / "index.html").read_text()
+    assert "assets/bookmarks/bookmarks." not in (output / "plain" / "index.html").read_text()
 
 
 def test_injects_assets_everywhere_when_instant_navigation_is_on(site):
@@ -89,7 +114,7 @@ def test_injects_assets_everywhere_when_instant_navigation_is_on(site):
 
     output = build_site(site)
 
-    assert "bookmarks.js" in (output / "plain" / "index.html").read_text()
+    assert "assets/bookmarks/bookmarks." in (output / "plain" / "index.html").read_text()
 
 
 def test_turkish_labels_come_from_the_theme_language(site):

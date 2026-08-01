@@ -18,8 +18,6 @@ from materialx_bookmarks.models import collection_to_dict
 
 ASSETS_DIR = Path(__file__).parent / "assets"
 OUTPUT_DIR = "assets/bookmarks"
-CSS_URI = f"{OUTPUT_DIR}/bookmarks.css"
-JS_URI = f"{OUTPUT_DIR}/bookmarks.js"
 
 
 class BookmarksPlugin(BasePlugin[BookmarksConfig]):
@@ -47,19 +45,20 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
         }
         self.pages_with_bookmarks: set[str] = set()
         self.inject_everywhere = _uses_instant_navigation(config)
+
+        self.assets = {}
+        for name in ("bookmarks.css", "bookmarks.js"):
+            content = (ASSETS_DIR / name).read_text("utf-8")
+            stem, suffix = name.rsplit(".", 1)
+            digest = hashlib.sha256(content.encode("utf-8")).hexdigest()[:8]
+            self.assets[suffix] = (f"{OUTPUT_DIR}/{stem}.{digest}.{suffix}", content)
         return config
 
     def on_files(self, files, config):
         for name, payload in self.payloads.items():
             files.append(File.generated(config, f"{OUTPUT_DIR}/{name}.json", content=payload))
-        files.append(
-            File.generated(
-                config, CSS_URI, content=(ASSETS_DIR / "bookmarks.css").read_text("utf-8")
-            )
-        )
-        files.append(
-            File.generated(config, JS_URI, content=(ASSETS_DIR / "bookmarks.js").read_text("utf-8"))
-        )
+        for uri, content in self.assets.values():
+            files.append(File.generated(config, uri, content=content))
         return files
 
     def on_page_markdown(self, markdown, page, config, files):
@@ -80,8 +79,8 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
     def on_post_page(self, output, page, config):
         if not self.inject_everywhere and page.file.src_uri not in self.pages_with_bookmarks:
             return output
-        css = get_relative_url(CSS_URI, page.url)
-        js = get_relative_url(JS_URI, page.url)
+        css = get_relative_url(self.assets["css"][0], page.url)
+        js = get_relative_url(self.assets["js"][0], page.url)
         tags = f'<link rel="stylesheet" href="{css}"><script defer src="{js}"></script>'
         return output.replace("</body>", f"{tags}</body>", 1)
 
