@@ -10,6 +10,16 @@ Bookmarks are written as YAML, validated when the site builds, and rendered in t
 search, tag filtering, sorting and pagination. State lives in the URL, so any view you are looking
 at can be linked to.
 
+## Install
+
+```bash
+pip install materialx-bookmarks
+```
+
+The package is on [PyPI](https://pypi.org/project/materialx-bookmarks/); setup and the full option
+reference live in the
+[README](https://github.com/berk-karaal/materialx-bookmarks#readme).
+
 ## A component in the middle of a page
 
 The block below sits between two paragraphs of ordinary Markdown — the component is not a special

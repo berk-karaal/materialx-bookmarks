@@ -1,5 +1,10 @@
 # materialx-bookmarks
 
+[![PyPI](https://img.shields.io/pypi/v/materialx-bookmarks?logo=pypi&logoColor=white)](https://pypi.org/project/materialx-bookmarks/)
+[![Python](https://img.shields.io/pypi/pyversions/materialx-bookmarks?logo=python&logoColor=white)](https://pypi.org/project/materialx-bookmarks/)
+[![Tests](https://github.com/berk-karaal/materialx-bookmarks/actions/workflows/tests.yml/badge.svg)](https://github.com/berk-karaal/materialx-bookmarks/actions/workflows/tests.yml)
+[![License](https://img.shields.io/pypi/l/materialx-bookmarks)](https://github.com/berk-karaal/materialx-bookmarks/blob/main/LICENSE)
+
 **A bookmark list component for [mkdocs-materialx](https://github.com/jaywhj/mkdocs-materialx).**
 Write your links in YAML, drop one fence into any page, and readers get search, tag filtering,
 sorting and pagination — no JavaScript to write, no database, no build step of your own.
@@ -174,7 +179,7 @@ live region, and pagination sits in a landmark `nav` — all of it keyboard reac
 
 English (`en`) and Turkish (`tr`) ship with the plugin, and the language follows your
 `theme.language` unless you set one. Adding another is a single file — see
-[CONTRIBUTING.md](CONTRIBUTING.md).
+[CONTRIBUTING.md](https://github.com/berk-karaal/materialx-bookmarks/blob/main/CONTRIBUTING.md).
 
 ## Requirements
 
@@ -182,8 +187,8 @@ Python 3.10+, MkDocs 1.5+, and the mkdocs-materialx theme.
 
 ## Contributing
 
-Tests, the demo site and the release workflow are described in [CONTRIBUTING.md](CONTRIBUTING.md).
+Tests, the demo site and the release workflow are described in [CONTRIBUTING.md](https://github.com/berk-karaal/materialx-bookmarks/blob/main/CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/berk-karaal/materialx-bookmarks/blob/main/LICENSE)
