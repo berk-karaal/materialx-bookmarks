@@ -11,7 +11,7 @@ sorting and pagination — no JavaScript to write, no database, no build step of
 
 | Light | Dark |
 | :---: | :---: |
-| <img width="100%" alt="A full documentation page in the light theme: site header, navigation sidebar, table of contents, and a bookmark component sitting between two paragraphs of ordinary prose, showing a search box, tag chips with counts, an active git filter, three bookmarks and centered pagination." src=".github/assets/screenshot-light.png"> | <img width="100%" alt="The same page in the dark theme, with the component inheriting the theme's colours." src=".github/assets/screenshot-dark.png"> |
+| <img width="100%" alt="A full documentation page in the light theme: site header, navigation sidebar, table of contents, and a bookmark component sitting between two paragraphs of ordinary prose, showing a search box, tag chips with counts, an active git filter, three bookmarks and centered pagination." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-light.png"> | <img width="100%" alt="The same page in the dark theme, with the component inheriting the theme's colours." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-dark.png"> |
 
 ---
 
@@ -39,10 +39,8 @@ in YAML and the *presentation* in the theme:
 
 ### 1. Install
 
-Not on PyPI yet — install from the repository:
-
 ```bash
-pip install git+https://github.com/berk-karaal/materialx-bookmarks.git
+pip install materialx-bookmarks
 ```
 
 ### 2. Write some bookmarks

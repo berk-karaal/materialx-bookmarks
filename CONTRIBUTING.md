@@ -49,3 +49,19 @@ Keep `{shown}` and `{total}` intact in `result_count`. A key you leave out falls
 logs a build warning.
 
 Run `uv run pytest tests/test_locales.py` — one test asserts every locale carries every key.
+
+## Releasing
+
+Releases publish to PyPI through
+[Trusted Publishing](https://docs.pypi.org/trusted-publishers/), so no API token is stored in this
+repository. The publisher is configured on PyPI against this repository, the `release.yml`
+workflow and the `pypi` environment.
+
+1. Update `version` in `pyproject.toml`.
+2. Move the `Unreleased` entries in `CHANGELOG.md` under the new version and add its link.
+3. Merge that to `main` and wait for the `tests` workflow to pass.
+4. Draft a GitHub release with tag `v<version>` and publish it.
+
+Publishing the release runs `.github/workflows/release.yml`, which refuses to continue unless the
+tag matches the version in `pyproject.toml`, then builds, runs `twine check`, installs the wheel
+into a clean environment and builds the demo site against it before uploading.

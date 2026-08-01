@@ -61,7 +61,7 @@ def test_emits_the_assets_with_hashed_names(site):
 def test_asset_name_changes_when_the_bundle_changes(site, tmp_path, monkeypatch):
     import materialx_bookmarks.plugin as plugin
 
-    before = list(build_site(site).glob("assets/bookmarks/bookmarks.*.js"))[0].name
+    before = next(build_site(site).glob("assets/bookmarks/bookmarks.*.js")).name
 
     fake_assets = tmp_path / "assets"
     fake_assets.mkdir()
@@ -69,7 +69,7 @@ def test_asset_name_changes_when_the_bundle_changes(site, tmp_path, monkeypatch)
     (fake_assets / "bookmarks.js").write_text("console.debug('changed');")
     monkeypatch.setattr(plugin, "ASSETS_DIR", fake_assets)
 
-    after = list(build_site(site).glob("assets/bookmarks/bookmarks.*.js"))[0].name
+    after = next(build_site(site).glob("assets/bookmarks/bookmarks.*.js")).name
 
     assert before != after
 
@@ -109,7 +109,9 @@ def test_injects_assets_everywhere_when_instant_navigation_is_on(site):
     (site / "docs" / "plain.md").write_text("# Plain\n\nNothing here.\n")
     config_text = (site / "mkdocs.yml").read_text()
     (site / "mkdocs.yml").write_text(
-        config_text.replace("  name: mkdocs", "  name: mkdocs\n  features:\n    - navigation.instant")
+        config_text.replace(
+            "  name: mkdocs", "  name: mkdocs\n  features:\n    - navigation.instant"
+        )
     )
 
     output = build_site(site)

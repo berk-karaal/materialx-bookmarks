@@ -1,0 +1,51 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Version matches the release tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(uv run python -c 'import tomllib,pathlib; print(tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"])')"
+          echo "tag=$tag project=$version"
+          test "$tag" = "$version"
+
+      - run: uv build
+      - run: uv run --with twine twine check dist/*
+
+      - name: Install the wheel into a clean environment and build the demo
+        run: |
+          uv venv /tmp/verify
+          VIRTUAL_ENV=/tmp/verify uv pip install dist/*.whl "mkdocs-materialx>=10.2"
+          /tmp/verify/bin/python -m mkdocs build -f demo/mkdocs.yml -d ../.verify-site --strict
+          test -n "$(find .verify-site/assets/bookmarks -name 'bookmarks.*.js')"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/materialx-bookmarks
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

@@ -1,0 +1,36 @@
+# Changelog
+
+All notable changes to this project are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0] - 2026-08-01
+
+First release.
+
+### Added
+
+- Bookmark collections written as YAML and validated at build time. A bookmark requires only a
+  `title`; `url`, `description` and `tags` are optional, and every tag must appear in the file's
+  `tags` allowlist.
+- A ` ```bookmarks ` fence that places a component anywhere on any page, any number of times, with
+  an optional `id` to namespace a component's URL parameters.
+- Fuzzy search over titles, descriptions and tags, powered by Fuse.js.
+- Multi-select tag filtering with AND semantics and per-tag counts.
+- Order reversal through a single icon toggle.
+- Numbered pagination with a configurable `per_page`.
+- Search, tags, sort and page state mirrored into the URL so any view can be linked to.
+- Interface strings in English and Turkish, resolved at build time and defaulting to the theme's
+  `language`.
+- Styling driven entirely by the theme's `--md-*` custom properties, so light, dark and accent
+  colours are inherited.
+- Support for the theme's `navigation.instant`: components re-initialise after an instant page
+  swap, and assets are injected site-wide when that feature is enabled.
+- Content-hashed asset filenames, so upgrading the plugin never serves a stale bundle.
+- Build-time failures, with the offending file and entry named, for unknown collections, duplicate
+  component ids, unlisted tags, malformed YAML and missing files.
+
+[Unreleased]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/berk-karaal/materialx-bookmarks/releases/tag/v0.1.0
