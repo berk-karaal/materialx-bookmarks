@@ -11,8 +11,15 @@ npm install
 npm test
 npm run build
 
-npx playwright test
+cd ..
+npm ci
+npx playwright install chromium
+npm run test:e2e
 ```
+
+CI runs these three suites on every push to `main` and every pull request
+(`.github/workflows/tests.yml`). The `web` job also rebuilds the bundle and fails if it differs
+from the committed one, so remember to commit `npm run build` output alongside `web/src` changes.
 
 `npm run build` writes the bundle into `src/materialx_bookmarks/assets/`. Commit that output —
 building a wheel must never require Node.
