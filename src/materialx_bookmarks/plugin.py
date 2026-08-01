@@ -1,0 +1,108 @@
+from __future__ import annotations
+
+import hashlib
+import html
+import json
+from pathlib import Path
+
+from mkdocs.exceptions import PluginError
+from mkdocs.plugins import BasePlugin
+from mkdocs.structure.files import File
+from mkdocs.utils import get_relative_url
+
+from materialx_bookmarks.config import BookmarksConfig, validate_collections
+from materialx_bookmarks.fence import FenceSpec, replace_fences
+from materialx_bookmarks.loader import BookmarkError, load_collection
+from materialx_bookmarks.locales import load_labels, resolve_language
+from materialx_bookmarks.models import collection_to_dict
+
+ASSETS_DIR = Path(__file__).parent / "assets"
+OUTPUT_DIR = "assets/bookmarks"
+CSS_URI = f"{OUTPUT_DIR}/bookmarks.css"
+JS_URI = f"{OUTPUT_DIR}/bookmarks.js"
+
+
+class BookmarksPlugin(BasePlugin[BookmarksConfig]):
+    def on_config(self, config):
+        try:
+            validate_collections(self.config["collections"])
+            language = resolve_language(self.config["language"], _theme_language(config))
+            self.labels = load_labels(language)
+            root = Path(config["config_file_path"]).parent
+            self.watch_paths = [str(root / item["file"]) for item in self.config["collections"]]
+            self.collections = {
+                item["name"]: load_collection(item["name"], root / item["file"], item["per_page"])
+                for item in self.config["collections"]
+            }
+        except BookmarkError as error:
+            raise PluginError(str(error)) from error
+
+        self.payloads = {
+            name: json.dumps(collection_to_dict(collection), ensure_ascii=False)
+            for name, collection in self.collections.items()
+        }
+        self.digests = {
+            name: hashlib.sha256(payload.encode("utf-8")).hexdigest()[:8]
+            for name, payload in self.payloads.items()
+        }
+        self.pages_with_bookmarks: set[str] = set()
+        return config
+
+    def on_files(self, files, config):
+        for name, payload in self.payloads.items():
+            files.append(File.generated(config, f"{OUTPUT_DIR}/{name}.json", content=payload))
+        files.append(
+            File.generated(
+                config, CSS_URI, content=(ASSETS_DIR / "bookmarks.css").read_text("utf-8")
+            )
+        )
+        files.append(
+            File.generated(config, JS_URI, content=(ASSETS_DIR / "bookmarks.js").read_text("utf-8"))
+        )
+        return files
+
+    def on_page_markdown(self, markdown, page, config, files):
+        try:
+            output, specs = replace_fences(
+                markdown,
+                page.file.src_uri,
+                set(self.collections),
+                lambda spec: self._placeholder(spec, page.url),
+            )
+        except BookmarkError as error:
+            raise PluginError(str(error)) from error
+
+        if specs:
+            self.pages_with_bookmarks.add(page.file.src_uri)
+        return output
+
+    def on_post_page(self, output, page, config):
+        if page.file.src_uri not in self.pages_with_bookmarks:
+            return output
+        css = get_relative_url(CSS_URI, page.url)
+        js = get_relative_url(JS_URI, page.url)
+        tags = f'<link rel="stylesheet" href="{css}"><script defer src="{js}"></script>'
+        return output.replace("</body>", f"{tags}</body>", 1)
+
+    def on_serve(self, server, config, builder):
+        for path in self.watch_paths:
+            server.watch(path)
+        return server
+
+    def _placeholder(self, spec: FenceSpec, page_url: str) -> str:
+        json_url = get_relative_url(f"{OUTPUT_DIR}/{spec.collection}.json", page_url)
+        data = {
+            "id": spec.id,
+            "url": f"{json_url}?h={self.digests[spec.collection]}",
+            "perPage": self.collections[spec.collection].per_page,
+            "labels": self.labels,
+        }
+        blob = html.escape(json.dumps(data, ensure_ascii=False))
+        return f'<div class="mxb" data-mxb="{blob}"></div>'
+
+
+def _theme_language(config) -> str | None:
+    try:
+        return config["theme"]["language"]
+    except KeyError:
+        return None
