@@ -108,8 +108,34 @@
   font-size: 0.85rem;
 }
 
-.mxb__link {
-  color: var(--md-primary-fg-color);
+.mxb__links {
+  margin: 0.4rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.mxb p.mxb__links > a.mxb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--md-accent-fg-color);
+  border-radius: 1rem;
+  color: var(--md-accent-fg-color);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.mxb p.mxb__links > a.mxb__link:hover,
+.mxb p.mxb__links > a.mxb__link:focus {
+  background: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color);
+}
+
+.mxb__link svg {
+  display: block;
+  flex: 0 0 auto;
 }
 
 .mxb__description {

@@ -3,6 +3,11 @@ const SORT_ICON =
   '<path fill="currentColor" d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>' +
   "</svg>";
 
+const LINK_ICON =
+  '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">' +
+  '<path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM5 5h4V3H3v18h18v-6h-2v4H5V5z"/>' +
+  "</svg>";
+
 function element(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -70,6 +75,16 @@ export function renderChips(container, tags, counts, selected, labels) {
   }
 }
 
+export function linkLabel(link) {
+  if (link.text) return link.text;
+
+  try {
+    return new URL(link.url).hostname.replace(/^www\./, "");
+  } catch {
+    return link.url;
+  }
+}
+
 export function renderList(container, items, labels) {
   container.textContent = "";
 
@@ -80,20 +95,24 @@ export function renderList(container, items, labels) {
 
   for (const item of items) {
     const entry = element("li", "mxb__item");
-    const heading = element("h3", "mxb__title");
-
-    if (item.url) {
-      const link = element("a", "mxb__link", item.title);
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      heading.append(link);
-    } else {
-      heading.textContent = item.title;
-    }
-    entry.append(heading);
+    entry.append(element("h3", "mxb__title", item.title));
 
     if (item.description) entry.append(element("p", "mxb__description", item.description));
+
+    if (item.links?.length) {
+      const links = element("p", "mxb__links");
+      for (const link of item.links) {
+        const anchor = element("a", "mxb__link");
+        anchor.href = link.url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.title = link.url;
+        anchor.innerHTML = LINK_ICON;
+        anchor.append(document.createTextNode(linkLabel(link)));
+        links.append(anchor);
+      }
+      entry.append(links);
+    }
 
     if (item.tags?.length) {
       const tags = element("p", "mxb__tags");
