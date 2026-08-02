@@ -6,6 +6,32 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-02
+
+### Added
+
+- A bookmark may carry several links through a `links` list, each with an optional `text`. They
+  render as buttons beneath the description. A link without `text` is labelled with its hostname.
+
+### Removed
+
+- **Breaking:** `url` on a bookmark. Use `links` instead, and note that the title is no longer a
+  link — every destination is a button.
+
+  ```yaml
+  # before
+  - title: Ruff
+    url: https://docs.astral.sh/ruff/
+
+  # after
+  - title: Ruff
+    links:
+      - text: Docs
+        url: https://docs.astral.sh/ruff/
+  ```
+
+  A build that still uses `url` fails with a message naming the file and entry.
+
 ## [0.2.0] - 2026-08-02
 
 ### Changed
@@ -42,6 +68,7 @@ First release.
 - Build-time failures, with the offending file and entry named, for unknown collections, duplicate
   component ids, unlisted tags, malformed YAML and missing files.
 
-[Unreleased]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/berk-karaal/materialx-bookmarks/releases/tag/v0.1.0

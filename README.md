@@ -29,6 +29,7 @@ in YAML and the *presentation* in the theme:
 | | |
 |---|---|
 | 🔍 **Fuzzy search** | Powered by Fuse.js, tolerant of typos, weighted toward titles |
+| 🔗 **Several links per bookmark** | Docs, source, changelog — each one a labelled button, or labelled by hostname if you'd rather not |
 | 🏷️ **Tag filtering** | Multi-select with AND semantics. Counts follow the current view, and a tag that would return nothing steps aside |
 | ↕️ **Sorting** | Your YAML order, or reversed |
 | 📄 **Pagination** | Numbered, configurable page size |
@@ -59,14 +60,19 @@ tags:
 
 bookmarks:
   - title: Ruff
-    url: https://docs.astral.sh/ruff/
     description: Linter and formatter for Python, written in Rust.
     tags: [python, rust]
+    links:
+      - text: Docs
+        url: https://docs.astral.sh/ruff/
+      - text: GitHub
+        url: https://github.com/astral-sh/ruff
 
   - title: ripgrep
-    url: https://github.com/BurntSushi/ripgrep
     description: Recursively searches directories for a regex pattern.
     tags: [rust]
+    links:
+      - url: https://github.com/BurntSushi/ripgrep
 ```
 
 ### 3. Register the collection
@@ -104,13 +110,18 @@ tags: [python, rust]        # allowlist — a bookmark may only use tags listed 
 
 bookmarks:
   - title: Ruff             # the only required field
-    url: https://…          # optional — without it the entry renders as plain text
     description: …          # optional
     tags: [python]          # optional
+    links:                  # optional — each entry needs a url
+      - text: Docs          # optional — without it the button shows the hostname
+        url: https://…
 ```
 
 Bookmarks appear in the order you write them. The `tags` allowlist is what turns a misspelled tag
 into a build error instead of a chip nobody ever clicks.
+
+Links render as buttons under the description, in the order you write them. A bookmark with no
+links renders as plain text.
 
 ### Plugin options
 
