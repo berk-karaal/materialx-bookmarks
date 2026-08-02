@@ -5,9 +5,13 @@ from typing import Any
 
 import yaml
 
-from materialx_bookmarks.models import Bookmark, Collection
+from materialx_bookmarks.models import Bookmark, Collection, Link
 
-BOOKMARK_KEYS = {"title", "url", "description", "tags"}
+BOOKMARK_KEYS = {"title", "links", "description", "tags"}
+LINK_KEYS = {"text", "url"}
+URL_REMOVED = (
+    "'url' was replaced by 'links' in 0.3.0 — use\n  links:\n    - url: https://example.com"
+)
 
 
 class BookmarkError(Exception):
@@ -52,6 +56,9 @@ def _parse_bookmark(raw: Any, index: int, allowed: set[str], source: str) -> Boo
     if not isinstance(raw, dict):
         raise BookmarkError(f"{where} must be a mapping")
 
+    if "url" in raw:
+        raise BookmarkError(f"{where}: {URL_REMOVED}")
+
     unknown = set(raw) - BOOKMARK_KEYS
     if unknown:
         raise BookmarkError(f"{where}: unknown field(s): {', '.join(sorted(unknown))}")
@@ -68,12 +75,38 @@ def _parse_bookmark(raw: Any, index: int, allowed: set[str], source: str) -> Boo
     if unlisted:
         raise BookmarkError(f"{where}: tag(s) not in the allowlist: {', '.join(unlisted)}")
 
+    raw_links = [] if raw.get("links") is None else raw["links"]
+    if not isinstance(raw_links, list):
+        raise BookmarkError(f"{where}: 'links' must be a list")
+
+    links = tuple(_parse_link(entry, index, where) for index, entry in enumerate(raw_links))
+
     return Bookmark(
         title=title,
-        url=_optional_string(raw, "url", where),
+        links=links,
         description=_optional_string(raw, "description", where),
         tags=tuple(item_tags),
     )
+
+
+def _parse_link(raw: Any, index: int, where: str) -> Link:
+    spot = f"{where}: link #{index + 1}"
+    if not isinstance(raw, dict):
+        raise BookmarkError(f"{spot} must be a mapping")
+
+    unknown = set(raw) - LINK_KEYS
+    if unknown:
+        raise BookmarkError(f"{spot}: unknown field(s): {', '.join(sorted(unknown))}")
+
+    url = raw.get("url")
+    if not isinstance(url, str) or not url.strip():
+        raise BookmarkError(f"{spot}: 'url' is required")
+
+    text = raw.get("text")
+    if text is not None and not isinstance(text, str):
+        raise BookmarkError(f"{spot}: 'text' must be a string")
+
+    return Link(url=url, text=text)
 
 
 def _optional_string(raw: dict, key: str, where: str) -> str | None:

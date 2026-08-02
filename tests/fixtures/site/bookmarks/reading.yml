@@ -5,23 +5,34 @@ tags:
 
 bookmarks:
   - title: Ruff
-    url: https://astral.sh/ruff
+    links:
+      - text: Docs
+        url: https://astral.sh/ruff
+      - url: https://github.com/astral-sh/ruff/releases
     description: Fast Python linter
     tags: [python]
   - title: uv
-    url: https://astral.sh/uv
+    links:
+      - text: Docs
+        url: https://astral.sh/uv
     description: Python package manager
     tags: [python]
   - title: ripgrep
-    url: https://github.com/BurntSushi/ripgrep
+    links:
+      - text: GitHub
+        url: https://github.com/BurntSushi/ripgrep
     description: Fast recursive search
     tags: [rust]
   - title: Pydantic AI
-    url: https://ai.pydantic.dev
+    links:
+      - text: Docs
+        url: https://ai.pydantic.dev
     description: Agent framework
     tags: [python, ai]
   - title: Fuse.js
-    url: https://fusejs.io
+    links:
+      - text: Docs
+        url: https://fusejs.io
     description: Fuzzy search library
     tags: [ai]
   - title: Plain note

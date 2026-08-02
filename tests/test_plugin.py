@@ -40,7 +40,11 @@ def test_emits_collection_json(site):
 
     assert payload["tags"] == ["python", "rust", "ai"]
     assert [item["title"] for item in payload["items"]][:2] == ["Ruff", "uv"]
-    assert "url" not in payload["items"][-1]
+    assert payload["items"][0]["links"] == [
+        {"url": "https://astral.sh/ruff", "text": "Docs"},
+        {"url": "https://github.com/astral-sh/ruff/releases"},
+    ]
+    assert "links" not in payload["items"][-1]
 
 
 def test_emits_the_assets_with_hashed_names(site):
