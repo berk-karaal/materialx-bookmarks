@@ -46,12 +46,35 @@ test("search, filter, sort, and paginate a collection", async ({ page }) => {
   await expect(page.locator(".mxb__empty")).toBeVisible();
 });
 
-test("a bookmark without a url renders as plain text", async ({ page }) => {
+test("links render as buttons and the title is plain text", async ({ page }) => {
+  await page.goto("/index.html");
+
+  const ruff = page.locator(".mxb__item").first();
+  const links = ruff.locator(".mxb__link");
+
+  await expect(ruff.locator(".mxb__title")).toHaveText("Ruff");
+  await expect(ruff.locator(".mxb__title a")).toHaveCount(0);
+
+  await expect(links).toHaveCount(2);
+  await expect(links.first()).toHaveText("Docs");
+  await expect(links.first()).toHaveAttribute("href", "https://astral.sh/ruff");
+  await expect(links.first()).toHaveAttribute("title", "https://astral.sh/ruff");
+  await expect(links.first()).toHaveAttribute("target", "_blank");
+
+  await expect(links.nth(1)).toHaveText("github.com");
+  await expect(links.nth(1)).toHaveAttribute(
+    "title",
+    "https://github.com/astral-sh/ruff/releases",
+  );
+});
+
+test("a bookmark without links renders as plain text", async ({ page }) => {
   await page.goto("/index.html?reading.sort=reversed");
 
   const first = page.locator(".mxb__item").first();
 
   await expect(first.locator(".mxb__title")).toHaveText("Plain note");
+  await expect(first.locator(".mxb__links")).toHaveCount(0);
   await expect(first.locator("a")).toHaveCount(0);
 });
 
