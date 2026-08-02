@@ -39,22 +39,34 @@ export function buildShell(root, labels) {
   return { search, sort, chips, count, list, pagination };
 }
 
-export function renderChips(container, tags, counts, selected, labels) {
-  container.textContent = "";
-  if (!tags.length) return;
-
+function buildChips(container, tags, labels) {
   const all = element("button", "mxb__chip mxb__chip--all", labels.all_tags);
   all.type = "button";
   all.dataset.tag = "";
-  all.setAttribute("aria-pressed", String(selected.length === 0));
   container.append(all);
 
   for (const tag of tags) {
-    const chip = element("button", "mxb__chip", `${tag} (${counts.get(tag) ?? 0})`);
+    const chip = element("button", "mxb__chip");
     chip.type = "button";
     chip.dataset.tag = tag;
-    chip.setAttribute("aria-pressed", String(selected.includes(tag)));
     container.append(chip);
+  }
+}
+
+export function renderChips(container, tags, counts, selected, labels) {
+  if (!tags.length) return;
+  if (!container.children.length) buildChips(container, tags, labels);
+
+  container.firstElementChild.setAttribute("aria-pressed", String(selected.length === 0));
+
+  for (const tag of tags) {
+    const chip = container.querySelector(`.mxb__chip[data-tag="${CSS.escape(tag)}"]`);
+    const count = counts.get(tag) ?? 0;
+    const active = selected.includes(tag);
+
+    chip.textContent = `${tag} (${count})`;
+    chip.setAttribute("aria-pressed", String(active));
+    chip.hidden = count === 0 && !active;
   }
 }
 

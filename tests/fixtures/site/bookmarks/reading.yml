@@ -16,6 +16,10 @@ bookmarks:
     url: https://github.com/BurntSushi/ripgrep
     description: Fast recursive search
     tags: [rust]
+  - title: Pydantic AI
+    url: https://ai.pydantic.dev
+    description: Agent framework
+    tags: [python, ai]
   - title: Fuse.js
     url: https://fusejs.io
     description: Fuzzy search library

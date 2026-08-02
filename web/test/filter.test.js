@@ -59,6 +59,12 @@ describe("applyFilters", () => {
     expect(result.visible.map((item) => item.title)).toEqual(["c", "d"]);
   });
 
+  it("exposes the filtered set before pagination", () => {
+    const result = applyFilters(ITEMS, state(), passthrough, 2);
+
+    expect(result.filtered.map((item) => item.title)).toEqual(["a", "b", "c", "d"]);
+  });
+
   it("applies search before tags", () => {
     const search = () => [ITEMS[1], ITEMS[2]];
 
@@ -89,5 +95,39 @@ describe("tagCounts", () => {
 
   it("reports zero for an unused tag", () => {
     expect(tagCounts(ITEMS, ["go"]).get("go")).toBe(0);
+  });
+
+  it("counts the intersection with the selected tags", () => {
+    const view = applyFilters(ITEMS, state({ tags: ["python"] }), passthrough, 10);
+
+    const counts = tagCounts(view.filtered, ["python", "rust", "ai"]);
+
+    expect([...counts.entries()]).toEqual([
+      ["python", 2],
+      ["rust", 0],
+      ["ai", 1],
+    ]);
+  });
+
+  it("counts a selected tag as the whole result set", () => {
+    const view = applyFilters(ITEMS, state({ tags: ["python", "ai"] }), passthrough, 10);
+
+    const counts = tagCounts(view.filtered, ["python", "ai"]);
+
+    expect(counts.get("python")).toBe(view.total);
+    expect(counts.get("ai")).toBe(view.total);
+  });
+
+  it("narrows with the search query", () => {
+    const search = () => [ITEMS[2]];
+
+    const view = applyFilters(ITEMS, state({ q: "rip" }), search, 10);
+    const counts = tagCounts(view.filtered, ["python", "rust", "ai"]);
+
+    expect([...counts.entries()]).toEqual([
+      ["python", 0],
+      ["rust", 1],
+      ["ai", 0],
+    ]);
   });
 });

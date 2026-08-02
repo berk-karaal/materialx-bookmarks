@@ -5,7 +5,7 @@ test("search, filter, sort, and paginate a collection", async ({ page }) => {
 
   const items = page.locator(".mxb__item");
   await expect(items).toHaveCount(2);
-  await expect(page.locator(".mxb__count")).toHaveText("2 of 5 bookmarks");
+  await expect(page.locator(".mxb__count")).toHaveText("2 of 6 bookmarks");
 
   await page.locator(".mxb__page--number[data-page='2']").click();
   await expect(items.first().locator(".mxb__title")).toHaveText("ripgrep");
@@ -17,11 +17,19 @@ test("search, filter, sort, and paginate a collection", async ({ page }) => {
   await expect(page).toHaveURL(/reading\.tags=python/);
   await expect(page).not.toHaveURL(/reading\.page=2/);
 
+  await expect(page.locator(".mxb__chip[data-tag='python']")).toHaveText("python (3)");
+  await expect(page.locator(".mxb__chip[data-tag='ai']")).toHaveText("ai (1)");
+  await expect(page.locator(".mxb__chip[data-tag='rust']")).toBeHidden();
+
   await page.locator(".mxb__chip[data-tag='']").click();
+  await expect(page.locator(".mxb__chip[data-tag='rust']")).toBeVisible();
+  await expect(page.locator(".mxb__chip[data-tag='rust']")).toHaveText("rust (1)");
   await page.locator(".mxb__search").fill("ripgrap");
   await expect(items).toHaveCount(1);
   await expect(items.first().locator(".mxb__title")).toHaveText("ripgrep");
   await expect(page).toHaveURL(/reading\.q=ripgrap/);
+  await expect(page.locator(".mxb__chip[data-tag='rust']")).toHaveText("rust (1)");
+  await expect(page.locator(".mxb__chip[data-tag='python']")).toBeHidden();
 
   await page.locator(".mxb__search").fill("");
   await page.locator(".mxb__sort").click();

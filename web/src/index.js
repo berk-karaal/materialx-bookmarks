@@ -8,6 +8,7 @@ import {
   renderList,
   renderPagination,
 } from "./render.js";
+import { reflow } from "./reflow.js";
 import { createSearch } from "./search.js";
 import { readState, writeState } from "./state.js";
 
@@ -17,7 +18,6 @@ function mount(root, config, data) {
   const { labels, perPage, id } = config;
   const nodes = buildShell(root, labels);
   const search = createSearch(data.items);
-  const counts = tagCounts(data.items, data.tags);
 
   let state = readState(id, window.location.search);
 
@@ -32,11 +32,12 @@ function mount(root, config, data) {
 
   const draw = () => {
     const view = applyFilters(data.items, state, search, perPage);
+    const counts = tagCounts(view.filtered, data.tags);
     state = { ...state, page: view.page };
 
     nodes.search.value = state.q;
     nodes.sort.setAttribute("aria-pressed", String(state.sort === "reversed"));
-    renderChips(nodes.chips, data.tags, counts, state.tags, labels);
+    reflow(nodes.chips, () => renderChips(nodes.chips, data.tags, counts, state.tags, labels));
     renderCount(nodes.count, view.visible.length, view.total, labels);
     renderList(nodes.list, view.visible, labels);
     renderPagination(nodes.pagination, view.page, view.pageCount, labels);

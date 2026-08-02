@@ -29,7 +29,7 @@ in YAML and the *presentation* in the theme:
 | | |
 |---|---|
 | 🔍 **Fuzzy search** | Powered by Fuse.js, tolerant of typos, weighted toward titles |
-| 🏷️ **Tag filtering** | Multi-select, AND semantics, live counts, allowlisted to catch typos at build time |
+| 🏷️ **Tag filtering** | Multi-select with AND semantics. Counts follow the current view, and a tag that would return nothing steps aside |
 | ↕️ **Sorting** | Your YAML order, or reversed |
 | 📄 **Pagination** | Numbered, configurable page size |
 | 🔗 **Shareable state** | Every view is a URL — search, tags, sort and page all round-trip |

@@ -48,10 +48,15 @@
 }
 
 .mxb__chips {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
   margin: 0.6rem 0;
+}
+
+.mxb__chip[hidden] {
+  display: none;
 }
 
 .mxb__chip {

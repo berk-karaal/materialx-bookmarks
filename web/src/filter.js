@@ -10,7 +10,7 @@ export function applyFilters(items, state, search, perPage) {
   const page = Math.min(Math.max(1, state.page), pageCount);
   const start = (page - 1) * perPage;
 
-  return { visible: ordered.slice(start, start + perPage), total, pageCount, page };
+  return { visible: ordered.slice(start, start + perPage), total, pageCount, page, filtered };
 }
 
 export function tagCounts(items, tags) {
