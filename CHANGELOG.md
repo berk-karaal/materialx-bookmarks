@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-02
+
+### Changed
+
+- Tag counts now follow the current view instead of the whole collection. With tags selected, the
+  number beside a tag is how many bookmarks carry the selection *and* that tag, so it always
+  predicts what clicking it gives. The search query narrows the counts too.
+- A tag whose count reaches zero is hidden until it can match again. The chip row animates the
+  reflow, and respects `prefers-reduced-motion`.
+
 ## [0.1.0] - 2026-08-01
 
 First release.
@@ -32,5 +42,6 @@ First release.
 - Build-time failures, with the offending file and entry named, for unknown collections, duplicate
   component ids, unlisted tags, malformed YAML and missing files.
 
-[Unreleased]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/berk-karaal/materialx-bookmarks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/berk-karaal/materialx-bookmarks/releases/tag/v0.1.0
