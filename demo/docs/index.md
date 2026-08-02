@@ -10,6 +10,9 @@ Bookmarks are written as YAML, validated when the site builds, and rendered in t
 search, tag filtering, sorting and pagination. State lives in the URL, so any view you are looking
 at can be linked to.
 
+A bookmark can point at several places — documentation, source, a changelog — each one a labelled
+button beneath its description.
+
 ## Install
 
 ```bash
@@ -36,5 +39,5 @@ switch the sort order and watch the address bar.
 
 - [Tools](tools.md) — the same collection on a page of its own
 - [Reading](reading.md) — blogs, six per page
-- [Learning](learning.md) — documentation, specs and books, including one entry with no link
+- [Learning](learning.md) — documentation, specs and books, including one entry with no links
 - [Two on one page](multiple.md) — two independent components side by side

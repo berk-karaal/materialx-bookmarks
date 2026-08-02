@@ -16,7 +16,7 @@ sorting and pagination — no JavaScript to write, no database, no build step of
 
 | Light | Dark |
 | :---: | :---: |
-| <img width="100%" alt="A full documentation page in the light theme: site header, navigation sidebar, table of contents, and a bookmark component sitting between two paragraphs of ordinary prose, showing a search box, tag chips with counts, an active git filter, three bookmarks and centered pagination." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-light.png"> | <img width="100%" alt="The same page in the dark theme, with the component inheriting the theme's colours." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-dark.png"> |
+| <img width="100%" alt="A full documentation page in the light theme: site header, navigation sidebar, table of contents, and a bookmark component sitting between two paragraphs of ordinary prose, showing a search box, tag chips with counts, an active git filter, three bookmarks each with labelled link buttons, and centered pagination." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-light.png"> | <img width="100%" alt="The same page in the dark theme, with the component inheriting the theme's colours." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/screenshot-dark.png"> |
 
 ---
 
