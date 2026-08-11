@@ -152,3 +152,71 @@ def test_an_unknown_collection_in_a_fence_fails_the_build(site, caplog):
         build_site(site)
 
     assert "unknown collection: nope" in caplog.text
+
+
+def test_labels_use_the_collection_nouns(site):
+    config_text = (site / "mkdocs.yml").read_text()
+    (site / "mkdocs.yml").write_text(
+        config_text.replace(
+            "          per_page: 2",
+            "          per_page: 2\n          item_name: article\n"
+            "          item_name_plural: articles",
+        )
+    )
+
+    output = build_site(site)
+    labels = blob((output / "index.html").read_text())["labels"]
+
+    assert labels["search_placeholder"] == "Search articles"
+    assert labels["no_results"] == "No articles found"
+    assert labels["result_count"] == "{shown} of {total} articles"
+    assert labels["result_count_one"] == "{shown} of {total} article"
+
+
+def test_labels_fall_back_to_the_locale_nouns(site):
+    output = build_site(site)
+    labels = blob((output / "index.html").read_text())["labels"]
+
+    assert labels["search_placeholder"] == "Search bookmarks"
+    assert labels["result_count"] == "{shown} of {total} bookmarks"
+
+
+def test_the_blob_carries_the_tag_sorting_and_the_language(site):
+    config_text = (site / "mkdocs.yml").read_text()
+    (site / "mkdocs.yml").write_text(
+        config_text.replace(
+            "          per_page: 2", "          per_page: 2\n          tag_sorting: count"
+        )
+    )
+
+    output = build_site(site)
+    data = blob((output / "index.html").read_text())
+
+    assert data["tagSorting"] == "count"
+    assert data["language"] == "en"
+
+
+def test_the_blob_defaults_to_manual_sorting(site):
+    output = build_site(site)
+
+    assert blob((output / "index.html").read_text())["tagSorting"] == "manual"
+
+
+def test_two_collections_get_their_own_labels(site):
+    (site / "bookmarks" / "projects.yml").write_text("tags: [a]\nbookmarks:\n  - title: One\n")
+    config_text = (site / "mkdocs.yml").read_text()
+    (site / "mkdocs.yml").write_text(
+        config_text + "        - name: projects\n          file: bookmarks/projects.yml\n"
+        "          item_name: project\n          item_name_plural: projects\n"
+    )
+    (site / "docs" / "projects.md").write_text(
+        "# Projects\n\n```bookmarks\ncollection: projects\n```\n"
+    )
+
+    output = build_site(site)
+
+    reading = blob((output / "index.html").read_text())["labels"]
+    projects = blob((output / "projects" / "index.html").read_text())["labels"]
+
+    assert reading["search_placeholder"] == "Search bookmarks"
+    assert projects["search_placeholder"] == "Search projects"
