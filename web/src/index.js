@@ -1,5 +1,5 @@
 import { fetchCollection, parseConfig } from "./config.js";
-import { applyFilters, tagCounts } from "./filter.js";
+import { applyFilters, orderTags, tagCounts } from "./filter.js";
 import {
   buildShell,
   renderChips,
@@ -15,7 +15,7 @@ import { readState, writeState } from "./state.js";
 const DEBOUNCE_MS = 200;
 
 function mount(root, config, data) {
-  const { labels, perPage, id } = config;
+  const { labels, perPage, id, tagSorting, language } = config;
   const nodes = buildShell(root, labels);
   const search = createSearch(data.items);
 
@@ -37,7 +37,10 @@ function mount(root, config, data) {
 
     nodes.search.value = state.q;
     nodes.sort.setAttribute("aria-pressed", String(state.sort === "reversed"));
-    reflow(nodes.chips, () => renderChips(nodes.chips, data.tags, counts, state.tags, labels));
+    const order = orderTags(data.tags, counts, tagSorting, language);
+    reflow(nodes.chips, () =>
+      renderChips(nodes.chips, data.tags, counts, state.tags, labels, order),
+    );
     renderCount(nodes.count, view.visible.length, view.total, labels);
     renderList(nodes.list, view.visible, labels);
     renderPagination(nodes.pagination, view.page, view.pageCount, labels);
