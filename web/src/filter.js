@@ -24,3 +24,15 @@ export function tagCounts(items, tags) {
 
   return counts;
 }
+
+export function orderTags(tags, counts, mode, language) {
+  if (mode === "alphabetical") {
+    return [...tags].sort((left, right) => left.localeCompare(right, language));
+  }
+
+  if (mode === "count") {
+    return [...tags].sort((left, right) => (counts.get(right) ?? 0) - (counts.get(left) ?? 0));
+  }
+
+  return tags;
+}

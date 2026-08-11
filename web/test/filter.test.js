@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applyFilters, tagCounts } from "../src/filter.js";
+import { applyFilters, orderTags, tagCounts } from "../src/filter.js";
 
 const ITEMS = [
   { title: "a", tags: ["python"] },
@@ -129,5 +129,60 @@ describe("tagCounts", () => {
       ["rust", 1],
       ["ai", 0],
     ]);
+  });
+});
+
+describe("orderTags", () => {
+  const TAGS = ["zeta", "alpha", "middle"];
+  const counts = new Map([
+    ["zeta", 1],
+    ["alpha", 3],
+    ["middle", 1],
+  ]);
+
+  it("keeps yaml order under manual", () => {
+    expect(orderTags(TAGS, counts, "manual", "en")).toEqual(["zeta", "alpha", "middle"]);
+  });
+
+  it("falls back to yaml order for an unknown mode", () => {
+    expect(orderTags(TAGS, counts, "nonsense", "en")).toEqual(["zeta", "alpha", "middle"]);
+  });
+
+  it("sorts alphabetically", () => {
+    expect(orderTags(TAGS, counts, "alphabetical", "en")).toEqual(["alpha", "middle", "zeta"]);
+  });
+
+  it("sorts alphabetically under the site language", () => {
+    expect(orderTags(["z", "ı", "i"], new Map(), "alphabetical", "tr")).toEqual(["ı", "i", "z"]);
+  });
+
+  it("sorts by count, descending", () => {
+    expect(orderTags(TAGS, counts, "count", "en")).toEqual(["alpha", "zeta", "middle"]);
+  });
+
+  it("breaks a count tie with the yaml order", () => {
+    const tied = new Map([
+      ["zeta", 2],
+      ["alpha", 2],
+      ["middle", 2],
+    ]);
+
+    expect(orderTags(TAGS, tied, "count", "en")).toEqual(["zeta", "alpha", "middle"]);
+  });
+
+  it("treats a tag missing from the counts as zero", () => {
+    expect(orderTags(TAGS, new Map([["middle", 5]]), "count", "en")).toEqual([
+      "middle",
+      "zeta",
+      "alpha",
+    ]);
+  });
+
+  it("does not mutate the input", () => {
+    const tags = ["zeta", "alpha"];
+
+    orderTags(tags, counts, "alphabetical", "en");
+
+    expect(tags).toEqual(["zeta", "alpha"]);
   });
 });
