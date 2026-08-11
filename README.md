@@ -30,7 +30,8 @@ in YAML and the *presentation* in the theme:
 |---|---|
 | 🔍 **Fuzzy search** | Powered by Fuse.js, tolerant of typos, weighted toward titles |
 | 🔗 **Several links per bookmark** | Docs, source, changelog — each one a labelled button, or labelled by hostname if you'd rather not |
-| 🏷️ **Tag filtering** | Multi-select with AND semantics. Counts follow the current view, and a tag that would return nothing steps aside |
+| 🏷️ **Tag filtering** | Multi-select with AND semantics. Counts follow the current view, and a tag that would return nothing steps aside. Chips sit in your order, alphabetically, or most-used first |
+| 🏷️ **Your own noun** | A collection of projects says "Search projects" and "3 of 12 projects", not "bookmarks" |
 | ↕️ **Sorting** | Your YAML order, or reversed |
 | 📄 **Pagination** | Numbered, configurable page size |
 | 🔗 **Shareable state** | Every view is a URL — search, tags, sort and page all round-trip |
@@ -141,6 +142,42 @@ plugins:
 | `collections[].name` | **yes** | — | The name pages refer to. Must be unique |
 | `collections[].file` | **yes** | — | Path to the YAML file, relative to `mkdocs.yml`. Keep it outside `docs/` so it is not copied into the built site |
 | `collections[].per_page` | no | `20` | Bookmarks per page |
+| `collections[].item_name` | no | the language's own word | Singular noun for one entry, e.g. `project` |
+| `collections[].item_name_plural` | no | the language's own word | Plural noun, e.g. `projects`. Required together with `item_name` |
+| `collections[].tag_sorting` | no | `manual` | Tag chip order: `manual`, `alphabetical` or `count` |
+
+### Naming what a collection holds
+
+By default the interface says "bookmarks" — "Search bookmarks", "3 of 12 bookmarks". A collection
+that holds something else can say so:
+
+```yaml
+collections:
+  - name: projects
+    file: bookmarks/projects.yml
+    item_name: project
+    item_name_plural: projects
+```
+
+The nouns go into every string that needs one: `Search projects`, `No projects found`,
+`3 of 12 projects`, and `1 of 1 project` when a single entry matches. Give both keys or neither —
+the plugin will not guess a plural. Leave them out and each language supplies its own word, so a
+Turkish site reads "Yer işaretleri içinde ara" without any configuration.
+
+### Ordering the tag chips
+
+```yaml
+collections:
+  - name: tools
+    file: bookmarks/tools.yml
+    tag_sorting: count
+```
+
+| | |
+|---|---|
+| `manual` | The order the tags are written in the collection's YAML. The default |
+| `alphabetical` | Sorted under the site's language, so Turkish `ı` lands where a Turkish reader expects it |
+| `count` | Most-used tag first, ties keeping the YAML order. The counts follow the current view, so the chips re-order as the reader searches and filters |
 
 ### Placing components
 
