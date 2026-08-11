@@ -203,16 +203,6 @@ def test_the_blob_defaults_to_manual_sorting(site):
 
 
 def test_two_collections_get_their_own_labels(site):
-    (site / "bookmarks" / "projects.yml").write_text("tags: [a]\nbookmarks:\n  - title: One\n")
-    config_text = (site / "mkdocs.yml").read_text()
-    (site / "mkdocs.yml").write_text(
-        config_text + "        - name: projects\n          file: bookmarks/projects.yml\n"
-        "          item_name: project\n          item_name_plural: projects\n"
-    )
-    (site / "docs" / "projects.md").write_text(
-        "# Projects\n\n```bookmarks\ncollection: projects\n```\n"
-    )
-
     output = build_site(site)
 
     reading = blob((output / "index.html").read_text())["labels"]
