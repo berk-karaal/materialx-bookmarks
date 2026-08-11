@@ -51,6 +51,8 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# Turkish locale strings are asserted verbatim in the tests.
+allowed-confusables = ["ı", "İ"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

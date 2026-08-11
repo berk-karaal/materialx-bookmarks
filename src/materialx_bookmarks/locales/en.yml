@@ -1,6 +1,9 @@
-search_placeholder: Search bookmarks
-no_results: No bookmarks found
-result_count: "{shown} of {total} bookmarks"
+item_name: bookmark
+item_name_plural: bookmarks
+search_placeholder: Search {items}
+no_results: No {items} found
+result_count: "{shown} of {total} {items}"
+result_count_one: "{shown} of {total} {item}"
 all_tags: All
 sort_reverse: Reverse order
 prev_page: Previous

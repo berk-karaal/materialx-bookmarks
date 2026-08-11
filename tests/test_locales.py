@@ -1,9 +1,17 @@
 import pytest
 
 from materialx_bookmarks.loader import BookmarkError
-from materialx_bookmarks.locales import available_locales, load_labels, resolve_language
+from materialx_bookmarks.locales import (
+    available_locales,
+    load_labels,
+    resolve_labels,
+    resolve_language,
+)
 
 KEYS = {
+    "item_name",
+    "item_name_plural",
+    "result_count_one",
     "search_placeholder",
     "no_results",
     "result_count",
@@ -52,3 +60,62 @@ def test_a_missing_key_falls_back_to_english(tmp_path, monkeypatch):
     monkeypatch.setattr(locales, "LOCALES_DIR", tmp_path)
 
     assert load_labels("xx") == {"a": "Ax", "b": "B"}
+
+
+def test_substitutes_both_nouns():
+    labels = {
+        "search_placeholder": "Search {items}",
+        "result_count": "{shown} of {total} {items}",
+        "result_count_one": "{shown} of {total} {item}",
+    }
+
+    resolved = resolve_labels(labels, "project", "projects")
+
+    assert resolved["search_placeholder"] == "Search projects"
+    assert resolved["result_count"] == "{shown} of {total} projects"
+    assert resolved["result_count_one"] == "{shown} of {total} project"
+
+
+def test_substitution_does_not_leave_a_stray_s():
+    resolved = resolve_labels({"a": "{items}"}, "project", "projects")
+
+    assert resolved["a"] == "projects"
+
+
+def test_substitution_leaves_the_input_untouched():
+    labels = {"a": "Search {items}"}
+
+    resolve_labels(labels, "project", "projects")
+
+    assert labels == {"a": "Search {items}"}
+
+
+def test_english_strings_read_naturally_with_the_default_nouns():
+    labels = load_labels("en")
+    resolved = resolve_labels(labels, labels["item_name"], labels["item_name_plural"])
+
+    assert resolved["search_placeholder"] == "Search bookmarks"
+    assert resolved["no_results"] == "No bookmarks found"
+    assert resolved["result_count"] == "{shown} of {total} bookmarks"
+    assert resolved["result_count_one"] == "{shown} of {total} bookmark"
+
+
+def test_turkish_strings_read_naturally_with_the_default_nouns():
+    labels = load_labels("tr")
+    resolved = resolve_labels(labels, labels["item_name"], labels["item_name_plural"])
+
+    assert resolved["search_placeholder"] == "Yer işaretleri içinde ara"
+    assert resolved["no_results"] == "Yer işaretleri bulunamadı"
+    assert resolved["result_count"] == "{total} yer işareti içinden {shown} tanesi"
+
+
+def test_capitalizes_a_sentence_initial_noun():
+    resolved = resolve_labels({"a": "{Items} bulunamadı"}, "proje", "projeler", "tr")
+
+    assert resolved["a"] == "Projeler bulunamadı"
+
+
+def test_capitalizes_a_turkish_dotted_i():
+    resolved = resolve_labels({"a": "{Items} bulunamadı"}, "içerik", "içerikler", "tr")
+
+    assert resolved["a"] == "İçerikler bulunamadı"

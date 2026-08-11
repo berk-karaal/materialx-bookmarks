@@ -1,6 +1,9 @@
-search_placeholder: Yer işaretlerinde ara
-no_results: Yer işareti bulunamadı
-result_count: "{total} yer işaretinden {shown} tanesi"
+item_name: yer işareti
+item_name_plural: yer işaretleri
+search_placeholder: "{Items} içinde ara"
+no_results: "{Items} bulunamadı"
+result_count: "{total} {item} içinden {shown} tanesi"
+result_count_one: "{total} {item} içinden {shown} tanesi"
 all_tags: Tümü
 sort_reverse: Sırayı ters çevir
 prev_page: Önceki

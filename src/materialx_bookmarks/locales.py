@@ -49,6 +49,30 @@ def load_labels(language: str) -> dict[str, str]:
     return merged
 
 
+def resolve_labels(
+    labels: dict[str, str], item: str, items: str, language: str = FALLBACK_LANGUAGE
+) -> dict[str, str]:
+    replacements = (
+        ("{Items}", _capitalize(items, language)),
+        ("{items}", items),
+        ("{Item}", _capitalize(item, language)),
+        ("{item}", item),
+    )
+    resolved = {}
+    for key, value in labels.items():
+        for placeholder, noun in replacements:
+            value = value.replace(placeholder, noun)
+        resolved[key] = value
+    return resolved
+
+
+def _capitalize(value: str, language: str) -> str:
+    if not value:
+        return value
+    head = "İ" if language == "tr" and value[0] == "i" else value[0].upper()
+    return head + value[1:]
+
+
 def _read(language: str) -> dict[str, str]:
     path = LOCALES_DIR / f"{language}.yml"
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
