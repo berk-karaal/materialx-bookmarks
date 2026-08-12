@@ -38,12 +38,16 @@ plugins:
         - name: tools
           file: bookmarks/tools.yml
           per_page: 6
+          item_name: tool
+          item_name_plural: tools
+          tag_sorting: count
         - name: reading
           file: bookmarks/reading.yml
           per_page: 5
         - name: learning
           file: bookmarks/learning.yml
           per_page: 8
+          tag_sorting: alphabetical
 
 markdown_extensions:
   - admonition

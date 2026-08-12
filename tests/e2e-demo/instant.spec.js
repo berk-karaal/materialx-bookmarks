@@ -21,7 +21,7 @@ test("renders under the materialx theme without console errors", async ({ page }
   await page.goto("/");
 
   await expect(page.locator(".mxb__item")).toHaveCount(6);
-  await expect(page.locator(".mxb__count")).toHaveText("6 of 15 bookmarks");
+  await expect(page.locator(".mxb__count")).toHaveText("6 of 15 tools");
   expect(errors).toEqual([]);
 });
 

@@ -58,7 +58,7 @@ function buildChips(container, tags, labels) {
   }
 }
 
-export function renderChips(container, tags, counts, selected, labels) {
+export function renderChips(container, tags, counts, selected, labels, order = tags) {
   if (!tags.length) return;
   if (!container.children.length) buildChips(container, tags, labels);
 
@@ -72,6 +72,20 @@ export function renderChips(container, tags, counts, selected, labels) {
     chip.textContent = `${tag} (${count})`;
     chip.setAttribute("aria-pressed", String(active));
     chip.hidden = count === 0 && !active;
+  }
+
+  // Moving a node blurs it, so only move what is actually out of place, and give focus back.
+  const focused = document.activeElement;
+  let previous = container.firstElementChild;
+
+  for (const tag of order) {
+    const chip = container.querySelector(`.mxb__chip[data-tag="${CSS.escape(tag)}"]`);
+    if (previous.nextElementSibling !== chip) previous.after(chip);
+    previous = chip;
+  }
+
+  if (focused instanceof HTMLElement && container.contains(focused)) {
+    focused.focus({ preventScroll: true });
   }
 }
 
@@ -124,10 +138,13 @@ export function renderList(container, items, labels) {
   }
 }
 
+export function countLabel(labels, shown, total) {
+  const template = total === 1 ? labels.result_count_one : labels.result_count;
+  return template.replace("{shown}", String(shown)).replace("{total}", String(total));
+}
+
 export function renderCount(node, shown, total, labels) {
-  node.textContent = labels.result_count
-    .replace("{shown}", String(shown))
-    .replace("{total}", String(total));
+  node.textContent = countLabel(labels, shown, total);
 }
 
 export function renderPagination(container, page, pageCount, labels) {

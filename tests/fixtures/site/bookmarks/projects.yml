@@ -1,0 +1,17 @@
+tags:
+  - alpha
+  - zeta
+
+bookmarks:
+  - title: alpha one
+    description: First alpha entry
+    tags: [alpha]
+  - title: alpha two
+    description: Second alpha entry
+    tags: [alpha]
+  - title: zeta gamma
+    description: Tagged both ways
+    tags: [alpha, zeta]
+  - title: zeta delta
+    description: Only zeta
+    tags: [zeta]

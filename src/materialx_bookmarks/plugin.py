@@ -13,7 +13,7 @@ from mkdocs.utils import get_relative_url
 from materialx_bookmarks.config import BookmarksConfig, validate_collections
 from materialx_bookmarks.fence import FenceSpec, replace_fences
 from materialx_bookmarks.loader import BookmarkError, load_collection
-from materialx_bookmarks.locales import load_labels, resolve_language
+from materialx_bookmarks.locales import load_labels, resolve_labels, resolve_language
 from materialx_bookmarks.models import collection_to_dict
 
 ASSETS_DIR = Path(__file__).parent / "assets"
@@ -24,13 +24,25 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
     def on_config(self, config):
         try:
             validate_collections(self.config["collections"])
-            language = resolve_language(self.config["language"], _theme_language(config))
-            self.labels = load_labels(language)
+            self.language = resolve_language(self.config["language"], _theme_language(config))
+            labels = load_labels(self.language)
             root = Path(config["config_file_path"]).parent
             self.watch_paths = [str(root / item["file"]) for item in self.config["collections"]]
             self.collections = {
                 item["name"]: load_collection(item["name"], root / item["file"], item["per_page"])
                 for item in self.config["collections"]
+            }
+            self.labels_by_collection = {
+                item["name"]: resolve_labels(
+                    labels,
+                    item["item_name"].strip() or labels["item_name"],
+                    item["item_name_plural"].strip() or labels["item_name_plural"],
+                    self.language,
+                )
+                for item in self.config["collections"]
+            }
+            self.tag_sortings = {
+                item["name"]: item["tag_sorting"] for item in self.config["collections"]
             }
         except BookmarkError as error:
             raise PluginError(str(error)) from error
@@ -95,7 +107,9 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
             "id": spec.id,
             "url": f"{json_url}?h={self.digests[spec.collection]}",
             "perPage": self.collections[spec.collection].per_page,
-            "labels": self.labels,
+            "tagSorting": self.tag_sortings[spec.collection],
+            "language": self.language,
+            "labels": self.labels_by_collection[spec.collection],
         }
         blob = html.escape(json.dumps(data, ensure_ascii=False))
         return f'<div class="mxb" data-mxb="{blob}"></div>'

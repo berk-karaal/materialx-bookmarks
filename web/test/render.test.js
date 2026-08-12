@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { linkLabel } from "../src/render.js";
+import { countLabel, linkLabel } from "../src/render.js";
 
 describe("linkLabel", () => {
   it("uses the given text", () => {
@@ -25,5 +25,24 @@ describe("linkLabel", () => {
 
   it("prefers text even when the url is unparseable", () => {
     expect(linkLabel({ text: "Local", url: "/local/page" })).toBe("Local");
+  });
+});
+
+const LABELS = {
+  result_count: "{shown} of {total} projects",
+  result_count_one: "{shown} of {total} project",
+};
+
+describe("countLabel", () => {
+  it("uses the plural template", () => {
+    expect(countLabel(LABELS, 3, 12)).toBe("3 of 12 projects");
+  });
+
+  it("uses the singular template when the total is one", () => {
+    expect(countLabel(LABELS, 1, 1)).toBe("1 of 1 project");
+  });
+
+  it("uses the plural template when nothing matched", () => {
+    expect(countLabel(LABELS, 0, 0)).toBe("0 of 0 projects");
   });
 });

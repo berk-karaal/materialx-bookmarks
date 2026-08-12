@@ -7,3 +7,9 @@ plugins:
         - name: reading
           file: bookmarks/reading.yml
           per_page: 2
+        - name: projects
+          file: bookmarks/projects.yml
+          per_page: 10
+          item_name: project
+          item_name_plural: projects
+          tag_sorting: count

@@ -6,6 +6,15 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `item_name` and `item_name_plural` on a collection, so the interface can say what the collection
+  actually holds — "Search projects", "1 of 12 projects". Both keys go together; left out, each
+  language supplies its own word and nothing changes.
+- `tag_sorting` on a collection: `manual` (the default, the order the tags are written in),
+  `alphabetical` under the site's language, or `count`, which puts the most-used tag first and
+  re-orders live as the reader filters.
+
 ## [0.3.0] - 2026-08-02
 
 ### Added

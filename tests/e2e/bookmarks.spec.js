@@ -85,3 +85,47 @@ test("state is restored from the url and scoped per instance", async ({ page }) 
   await expect(page.locator(".mxb__item .mxb__title")).toHaveText("ripgrep");
   await expect(page.locator(".mxb__chip[data-tag='rust']")).toHaveAttribute("aria-pressed", "true");
 });
+
+test("a collection names its own entries and orders chips by count", async ({ page }) => {
+  await page.goto("/projects/index.html");
+
+  const chips = page.locator(".mxb__chip:not([hidden])");
+  const search = page.locator(".mxb__search");
+  const count = page.locator(".mxb__count");
+
+  await expect(search).toHaveAttribute("placeholder", "Search projects");
+  await expect(count).toHaveText("4 of 4 projects");
+  await expect(chips).toHaveText(["All", "alpha (3)", "zeta (2)"]);
+
+  await search.fill("zeta");
+  await expect(count).toHaveText("2 of 2 projects");
+  await expect(chips).toHaveText(["All", "zeta (2)", "alpha (1)"]);
+
+  await search.fill("gamma");
+  await expect(count).toHaveText("1 of 1 project");
+
+  await search.fill("qqqqqqqq");
+  await expect(page.locator(".mxb__empty")).toHaveText("No projects found");
+});
+
+test("keyboard focus stays on a chip that re-orders under it", async ({ page }) => {
+  await page.goto("/projects/index.html");
+
+  const chip = page.locator(".mxb__chip[data-tag='zeta']");
+  await chip.focus();
+  await page.keyboard.press("Enter");
+
+  await expect(page.locator(".mxb__chip:not([hidden])")).toHaveText([
+    "All",
+    "zeta (2)",
+    "alpha (1)",
+  ]);
+  await expect(chip).toBeFocused();
+});
+
+test("a collection without nouns keeps saying bookmarks", async ({ page }) => {
+  await page.goto("/index.html");
+
+  await expect(page.locator(".mxb__search")).toHaveAttribute("placeholder", "Search bookmarks");
+  await expect(page.locator(".mxb__count")).toHaveText("2 of 6 bookmarks");
+});
