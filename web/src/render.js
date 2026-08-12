@@ -74,8 +74,18 @@ export function renderChips(container, tags, counts, selected, labels, order = t
     chip.hidden = count === 0 && !active;
   }
 
+  // Moving a node blurs it, so only move what is actually out of place, and give focus back.
+  const focused = document.activeElement;
+  let previous = container.firstElementChild;
+
   for (const tag of order) {
-    container.append(container.querySelector(`.mxb__chip[data-tag="${CSS.escape(tag)}"]`));
+    const chip = container.querySelector(`.mxb__chip[data-tag="${CSS.escape(tag)}"]`);
+    if (previous.nextElementSibling !== chip) previous.after(chip);
+    previous = chip;
+  }
+
+  if (focused instanceof HTMLElement && container.contains(focused)) {
+    focused.focus({ preventScroll: true });
   }
 }
 

@@ -108,6 +108,21 @@ test("a collection names its own entries and orders chips by count", async ({ pa
   await expect(page.locator(".mxb__empty")).toHaveText("No projects found");
 });
 
+test("keyboard focus stays on a chip that re-orders under it", async ({ page }) => {
+  await page.goto("/projects/index.html");
+
+  const chip = page.locator(".mxb__chip[data-tag='zeta']");
+  await chip.focus();
+  await page.keyboard.press("Enter");
+
+  await expect(page.locator(".mxb__chip:not([hidden])")).toHaveText([
+    "All",
+    "zeta (2)",
+    "alpha (1)",
+  ]);
+  await expect(chip).toBeFocused();
+});
+
 test("a collection without nouns keeps saying bookmarks", async ({ page }) => {
   await page.goto("/index.html");
 
