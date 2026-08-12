@@ -44,9 +44,13 @@ plugins:
         - name: reading
           file: bookmarks/reading.yml
           per_page: 5
+          item_name: blog
+          item_name_plural: blogs
         - name: learning
           file: bookmarks/learning.yml
           per_page: 8
+          item_name: resource
+          item_name_plural: resources
           tag_sorting: alphabetical
 
 markdown_extensions:

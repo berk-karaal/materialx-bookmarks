@@ -60,6 +60,7 @@ test("survives instant navigation from another bookmarks page", async ({ page })
   await navigateInstantly(page, "/", "reading/", "**/reading/**");
 
   await expect(page.locator(".mxb__item")).toHaveCount(5);
+  await expect(page.locator(".mxb__count")).toHaveText("5 of 12 blogs");
 });
 
 test("survives instant navigation from a page without a component", async ({ page }) => {
