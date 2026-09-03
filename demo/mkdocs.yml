@@ -29,6 +29,7 @@ nav:
   - Tools: tools.md
   - Reading: reading.md
   - Learning: learning.md
+  - Display modes: display.md
   - Two on one page: multiple.md
   - About: about.md
 
@@ -49,7 +50,7 @@ plugins:
           per_page: 5
           item_name: blog
           item_name_plural: blogs
-          display_options: []
+          display_options: [list, compact]
         - name: learning
           file: bookmarks/learning.yml
           per_page: 8

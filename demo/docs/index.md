@@ -18,3 +18,7 @@ collection: tools
 
 Everything after the component is normal page content again. Try a search, combine two tags, or
 switch the sort order and watch the address bar.
+
+This one opens as a grid of blocks because its collection asks for it. Use the switcher beside the
+search box to try the other two modes — and note that the address bar does *not* change when you
+do. See [display modes](display.md) for why.
