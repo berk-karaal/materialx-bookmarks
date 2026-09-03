@@ -210,3 +210,23 @@ def test_two_collections_get_their_own_labels(site):
 
     assert reading["search_placeholder"] == "Search bookmarks"
     assert projects["search_placeholder"] == "Search projects"
+
+
+def test_the_placeholder_carries_the_display_settings(site):
+    output = build_site(site)
+
+    data = blob((output / "index.html").read_text())
+
+    assert data["display"] == "list"
+    assert data["displayOptions"] == ["list", "blocks", "compact"]
+    assert data["perPageOptions"] == [2, 4, "all"]
+    assert data["blockMinWidth"] == "10rem"
+
+
+def test_a_collection_without_page_size_options_gets_no_picker(site):
+    output = build_site(site)
+
+    data = blob((output / "projects" / "index.html").read_text())
+
+    assert data["perPageOptions"] == []
+    assert data["blockMinWidth"] == "12rem"

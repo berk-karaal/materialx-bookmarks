@@ -3,6 +3,21 @@ const SORT_ICON =
   '<path fill="currentColor" d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>' +
   "</svg>";
 
+const VIEW_ICONS = {
+  list:
+    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+    '<path fill="currentColor" d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12' +
+    'v-4H9v4zM9 5v4h12V5H9z"/></svg>',
+  blocks:
+    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+    '<path fill="currentColor" d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>' +
+    "</svg>",
+  compact:
+    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+    '<path fill="currentColor" d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"/>' +
+    "</svg>",
+};
+
 const LINK_ICON =
   '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">' +
   '<path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM5 5h4V3H3v18h18v-6h-2v4H5V5z"/>' +
@@ -15,7 +30,43 @@ function element(tag, className, text) {
   return node;
 }
 
-export function buildShell(root, labels) {
+function buildViews(displays, labels) {
+  const group = element("div", "mxb__views");
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", labels.display_mode);
+
+  for (const display of displays) {
+    const button = element("button", "mxb__view");
+    button.type = "button";
+    button.dataset.view = display;
+    button.title = labels[`view_${display}`];
+    button.setAttribute("aria-label", labels[`view_${display}`]);
+    button.setAttribute("aria-pressed", "false");
+    button.innerHTML = VIEW_ICONS[display];
+    group.append(button);
+  }
+
+  return group;
+}
+
+function buildSize(sizes, labels) {
+  const field = element("label", "mxb__sizefield");
+  field.append(element("span", "mxb__sizelabel", labels.page_size));
+
+  const select = element("select", "mxb__size");
+  for (const size of sizes) {
+    const option = element("option", null, size === "all" ? labels.page_size_all : String(size));
+    option.value = String(size);
+    select.append(option);
+  }
+
+  field.append(select);
+  return { field, select };
+}
+
+export function buildShell(root, labels, options = {}) {
+  const displays = options.displayOptions ?? [];
+  const sizes = options.pageSizeOptions ?? [];
   root.textContent = "";
 
   const controls = element("div", "mxb__controls");
@@ -31,17 +82,25 @@ export function buildShell(root, labels) {
   sort.setAttribute("aria-pressed", "false");
   sort.innerHTML = SORT_ICON;
 
-  controls.append(search, sort);
+  // A single switcher is not a choice, so it is left out rather than shown disabled.
+  const views = displays.length > 1 ? buildViews(displays, labels) : null;
+  controls.append(search, ...(views ? [views] : []), sort);
 
   const chips = element("div", "mxb__chips");
+
+  // The page size belongs with the count it governs, pushed to the far end of that row.
+  const countbar = element("div", "mxb__countbar");
   const count = element("p", "mxb__count");
   count.setAttribute("aria-live", "polite");
+  const size = sizes.length > 1 ? buildSize(sizes, labels) : null;
+  countbar.append(count, ...(size ? [size.field] : []));
+
   const list = element("ul", "mxb__list");
   const pagination = element("nav", "mxb__pagination");
   pagination.setAttribute("aria-label", labels.next_page);
 
-  root.append(controls, chips, count, list, pagination);
-  return { search, sort, chips, count, list, pagination };
+  root.append(controls, chips, countbar, list, pagination);
+  return { search, sort, views, size: size?.select ?? null, chips, count, list, pagination };
 }
 
 function buildChips(container, tags, labels) {
@@ -99,7 +158,18 @@ export function linkLabel(link) {
   }
 }
 
-export function renderList(container, items, labels) {
+export function renderViews(container, display) {
+  if (!container) return;
+
+  for (const button of container.children) {
+    button.setAttribute("aria-pressed", String(button.dataset.view === display));
+  }
+}
+
+// Every display mode renders the same markup; only this class differs, and the stylesheet
+// turns it into rows, blocks or one-liners.
+export function renderList(container, items, labels, display = "list") {
+  container.className = display === "list" ? "mxb__list" : `mxb__list mxb__list--${display}`;
   container.textContent = "";
 
   if (!items.length) {
@@ -122,7 +192,10 @@ export function renderList(container, items, labels) {
         anchor.rel = "noopener noreferrer";
         anchor.title = link.url;
         anchor.innerHTML = LINK_ICON;
-        anchor.append(document.createTextNode(linkLabel(link)));
+        // The label is wrapped so compact mode can hide it without losing the accessible name.
+        const label = linkLabel(link);
+        anchor.setAttribute("aria-label", label);
+        anchor.append(element("span", "mxb__linktext", label));
         links.append(anchor);
       }
       entry.append(links);

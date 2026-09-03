@@ -19,6 +19,12 @@ KEYS = {
     "sort_reverse",
     "prev_page",
     "next_page",
+    "display_mode",
+    "view_list",
+    "view_blocks",
+    "view_compact",
+    "page_size",
+    "page_size_all",
 }
 
 

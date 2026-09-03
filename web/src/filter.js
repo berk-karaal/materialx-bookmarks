@@ -1,3 +1,5 @@
+import { PAGE_SIZE_ALL } from "./state.js";
+
 export function applyFilters(items, state, search, perPage) {
   const searched = search(state.q);
   const filtered = state.tags.length
@@ -6,11 +8,13 @@ export function applyFilters(items, state, search, perPage) {
   const ordered = state.sort === "reversed" ? [...filtered].reverse() : filtered;
 
   const total = ordered.length;
-  const pageCount = Math.max(1, Math.ceil(total / perPage));
+  // "All" is just a page size that always covers everything, so paging stays one code path.
+  const size = perPage === PAGE_SIZE_ALL ? Math.max(total, 1) : perPage;
+  const pageCount = Math.max(1, Math.ceil(total / size));
   const page = Math.min(Math.max(1, state.page), pageCount);
-  const start = (page - 1) * perPage;
+  const start = (page - 1) * size;
 
-  return { visible: ordered.slice(start, start + perPage), total, pageCount, page, filtered };
+  return { visible: ordered.slice(start, start + size), total, pageCount, page, filtered };
 }
 
 export function tagCounts(items, tags) {
