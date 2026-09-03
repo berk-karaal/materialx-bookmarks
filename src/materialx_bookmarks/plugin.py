@@ -10,7 +10,12 @@ from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import File
 from mkdocs.utils import get_relative_url
 
-from materialx_bookmarks.config import BookmarksConfig, validate_collections
+from materialx_bookmarks.config import (
+    BookmarksConfig,
+    resolve_display_options,
+    resolve_page_size_options,
+    validate_collections,
+)
 from materialx_bookmarks.fence import FenceSpec, replace_fences
 from materialx_bookmarks.loader import BookmarkError, load_collection
 from materialx_bookmarks.locales import load_labels, resolve_labels, resolve_language
@@ -43,6 +48,15 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
             }
             self.tag_sortings = {
                 item["name"]: item["tag_sorting"] for item in self.config["collections"]
+            }
+            self.display = {
+                item["name"]: {
+                    "display": item["display"],
+                    "displayOptions": resolve_display_options(item),
+                    "perPageOptions": resolve_page_size_options(item),
+                    "blockMinWidth": item["block_min_width"],
+                }
+                for item in self.config["collections"]
             }
         except BookmarkError as error:
             raise PluginError(str(error)) from error
@@ -110,6 +124,7 @@ class BookmarksPlugin(BasePlugin[BookmarksConfig]):
             "tagSorting": self.tag_sortings[spec.collection],
             "language": self.language,
             "labels": self.labels_by_collection[spec.collection],
+            **self.display[spec.collection],
         }
         blob = html.escape(json.dumps(data, ensure_ascii=False))
         return f'<div class="mxb" data-mxb="{blob}"></div>'

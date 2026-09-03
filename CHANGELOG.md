@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Display modes. A collection can be drawn as the usual `list`, as responsive `blocks` whose column
+  count follows the component's own width, or as `compact` one-line rows. `display` sets where a
+  collection starts, `display_options` limits what the reader may switch to (`[]` hides the
+  switcher), and `block_min_width` tunes the block grid. The reader's choice is remembered in
+  `localStorage` under a key namespaced by component id, so two collections on one page keep their
+  own; it stays out of the URL because it changes how a collection is drawn, not what it shows.
+- `per_page_options` on a collection, offering the reader a page size next to the result count.
+  Entries are page sizes or `all`, and the list must include `per_page`, which remains the default.
+  The chosen size travels in the URL as `<id>.size`, since it decides which bookmarks a given page
+  number lands on.
+
 ## [0.4.0] - 2026-08-12
 
 ### Added

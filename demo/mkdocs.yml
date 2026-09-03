@@ -29,6 +29,7 @@ nav:
   - Tools: tools.md
   - Reading: reading.md
   - Learning: learning.md
+  - Display modes: display.md
   - Two on one page: multiple.md
   - About: about.md
 
@@ -38,20 +39,26 @@ plugins:
         - name: tools
           file: bookmarks/tools.yml
           per_page: 6
+          per_page_options: [6, 12, all]
           item_name: tool
           item_name_plural: tools
           tag_sorting: count
+          display: blocks
+          block_min_width: 14rem
         - name: reading
           file: bookmarks/reading.yml
           per_page: 5
           item_name: blog
           item_name_plural: blogs
+          display_options: [list, compact]
         - name: learning
           file: bookmarks/learning.yml
           per_page: 8
+          per_page_options: [8, 16, all]
           item_name: resource
           item_name_plural: resources
           tag_sorting: alphabetical
+          display: compact
 
 markdown_extensions:
   - admonition

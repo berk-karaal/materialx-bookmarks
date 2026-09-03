@@ -8,3 +8,9 @@ all_tags: All
 sort_reverse: Reverse order
 prev_page: Previous
 next_page: Next
+display_mode: Display
+view_list: List view
+view_blocks: Block view
+view_compact: Compact view
+page_size: Per page
+page_size_all: All

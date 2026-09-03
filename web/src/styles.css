@@ -195,3 +195,153 @@
   opacity: 0.5;
   cursor: default;
 }
+
+/* Display switcher, sized off the sort button so the toolbar keeps one silhouette. */
+
+.mxb__views {
+  flex: 0 0 auto;
+  display: inline-flex;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  overflow: hidden;
+}
+
+.mxb__view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--md-default-fg-color--lighter);
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color--light);
+  cursor: pointer;
+}
+
+.mxb__view:last-child {
+  border-right: 0;
+}
+
+.mxb__view:hover {
+  color: var(--md-default-fg-color);
+}
+
+.mxb__view[aria-pressed="true"] {
+  background: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color);
+}
+
+.mxb__view svg {
+  display: block;
+}
+
+/* The page size sits at the far end of the row it governs. */
+
+.mxb__countbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.mxb__sizefield {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}
+
+.mxb__size {
+  padding: 0.1rem 0.3rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-size: 0.7rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.mxb__size:hover {
+  border-color: var(--md-default-fg-color--light);
+}
+
+/* Blocks. auto-fill makes the column count a function of the component's own width, so the
+   grid reflows inside a narrow content column exactly as it does on a wide page. */
+
+.mxb ul.mxb__list--blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--mxb-block-min, 12rem), 1fr));
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.mxb ul.mxb__list--blocks > li.mxb__item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+}
+
+/* Links sit at the foot, so cards of unequal height still end the same way. */
+.mxb ul.mxb__list--blocks > li.mxb__item > .mxb__links {
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/* Compact: one row per bookmark. Same markup as every other mode, laid out inline. */
+
+.mxb ul.mxb__list--compact {
+  margin-top: 0.4rem;
+}
+
+.mxb ul.mxb__list--compact > li.mxb__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.5rem;
+  padding: 0.3rem 0;
+}
+
+.mxb .mxb__list--compact .mxb__title {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+}
+
+.mxb .mxb__list--compact .mxb__description {
+  flex: 1 1 8rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mxb .mxb__list--compact .mxb__tags,
+.mxb .mxb__list--compact .mxb__links {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.mxb .mxb__list--compact p.mxb__links > a.mxb__link {
+  padding: 0.1rem 0.3rem;
+  border-color: var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--light);
+}
+
+.mxb .mxb__list--compact p.mxb__links > a.mxb__link:hover,
+.mxb .mxb__list--compact p.mxb__links > a.mxb__link:focus {
+  border-color: var(--md-accent-fg-color);
+  background: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color);
+}
+
+/* The anchor keeps its aria-label, so hiding the text costs nothing to a screen reader. */
+.mxb .mxb__list--compact .mxb__linktext {
+  display: none;
+}

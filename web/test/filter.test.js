@@ -186,3 +186,20 @@ describe("orderTags", () => {
     expect(tags).toEqual(["zeta", "alpha"]);
   });
 });
+
+describe('a page size of "all"', () => {
+  it("shows everything on one page", () => {
+    const result = applyFilters(ITEMS, state(), passthrough, "all");
+
+    expect(result.visible).toHaveLength(4);
+    expect(result.pageCount).toBe(1);
+    expect(result.page).toBe(1);
+  });
+
+  it("still reports one page when nothing matched", () => {
+    const result = applyFilters(ITEMS, state({ tags: ["nope"] }), passthrough, "all");
+
+    expect(result.visible).toHaveLength(0);
+    expect(result.pageCount).toBe(1);
+  });
+});

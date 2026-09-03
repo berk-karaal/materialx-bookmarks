@@ -33,7 +33,8 @@ in YAML and the *presentation* in the theme:
 | 🏷️ **Tag filtering** | Multi-select with AND semantics. Counts follow the current view, and a tag that would return nothing steps aside. Chips sit in your order, alphabetically, or most-used first |
 | 🏷️ **Your own noun** | A collection of projects says "Search projects" and "3 of 12 projects", not "bookmarks" |
 | ↕️ **Sorting** | Your YAML order, or reversed |
-| 📄 **Pagination** | Numbered, configurable page size |
+| 🔲 **Display modes** | A list, responsive blocks, or one dense row per entry. Readers switch; the choice sticks |
+| 📄 **Pagination** | Numbered, with a page size the reader can change if you offer the choice |
 | 🔗 **Shareable state** | Every view is a URL — search, tags, sort and page all round-trip |
 | 🧩 **Anywhere on any page** | Mid-article, several per page, as many collections as you like |
 | 🎨 **Themed automatically** | Styled entirely with the theme's own CSS variables — light, dark and your accent colour |
@@ -145,6 +146,10 @@ plugins:
 | `collections[].item_name` | no | the language's own word | Singular noun for one entry, e.g. `project` |
 | `collections[].item_name_plural` | no | the language's own word | Plural noun, e.g. `projects`. Required together with `item_name` |
 | `collections[].tag_sorting` | no | `manual` | Tag chip order: `manual`, `alphabetical` or `count` |
+| `collections[].per_page_options` | no | — | Page sizes the reader may pick from, e.g. `[10, 25, all]`. Must include `per_page`. Omit it and there is no picker |
+| `collections[].display` | no | `list` | How the collection is drawn first: `list`, `blocks` or `compact` |
+| `collections[].display_options` | no | all three | Modes the reader may switch between. Must include `display`. Use `[]` for no switcher |
+| `collections[].block_min_width` | no | `12rem` | Narrowest a block column may get before the grid drops one |
 
 ### Naming what a collection holds
 
@@ -179,6 +184,58 @@ collections:
 | `alphabetical` | Sorted under the site's language, so Turkish `ı` lands where a Turkish reader expects it |
 | `count` | Most-used tag first, ties keeping the YAML order. The counts follow the current view, so the chips re-order as the reader searches and filters |
 
+### Display modes
+
+Bookmarks can be drawn three ways, and the reader picks between them from a switcher beside the
+search box:
+
+| | |
+|---|---|
+| `list` | Title, description, links and tags stacked down the page. The default |
+| `blocks` | A responsive grid of bordered cards. Columns are a function of the component's own width, so it reflows the same whether it sits in a narrow content column or a wide page |
+| `compact` | One row per bookmark: title, a single-line description, tags and unlabelled link icons |
+
+```yaml
+collections:
+  - name: tools
+    file: bookmarks/tools.yml
+    display: blocks
+    block_min_width: 14rem
+```
+
+| `blocks` | `compact` |
+| :---: | :---: |
+| <img width="100%" alt="A two-column grid of bordered rounded cards, each with a bold title, a description, outlined link buttons and tag pills. The link rows align across each pair of cards." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/blocks.png"> | <img width="100%" alt="One row per bookmark: a bold title, a single-line description, then unlabelled link icons and tag pills aligned to the right edge." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/compact.png"> |
+
+`display` is where a collection starts. Set `display_options` to narrow what the reader may choose,
+or to `[]` to fix the mode and hide the switcher entirely:
+
+```yaml
+    display: blocks
+    display_options: [list, blocks]
+```
+
+The reader's choice is remembered in `localStorage`, namespaced by component id, so two collections
+on one page each keep their own. It is deliberately *not* in the URL: the display mode says how a
+collection is drawn, not which bookmarks it shows.
+
+### Letting readers choose the page size
+
+```yaml
+collections:
+  - name: tools
+    file: bookmarks/tools.yml
+    per_page: 12
+    per_page_options: [12, 24, all]
+```
+
+A picker appears at the end of the count line. `all` drops pagination for that view. The list must
+include `per_page`, which stays the default. Without `per_page_options` nothing changes: the page
+size is yours alone.
+
+Unlike the display mode, the page size *is* in the URL — it decides which bookmarks a given page
+number lands on, so a shared link would otherwise point somewhere else for the person who opens it.
+
 ### Placing components
 
 A page may hold as many components as you like. Give a fence an `id` when two of them would
@@ -198,12 +255,15 @@ id: reading-secondary
 
 ### URL state
 
-Every control writes to the address bar, namespaced by component id, so a filtered view can be
-linked to and returns intact:
+Every control that changes *which* bookmarks are shown writes to the address bar, namespaced by
+component id, so a filtered view can be linked to and returns intact:
 
 ```
-?reading.q=ruff&reading.tags=python,rust&reading.sort=reversed&reading.page=2
+?reading.q=ruff&reading.tags=python,rust&reading.sort=reversed&reading.page=2&reading.size=50
 ```
+
+The display mode is the one exception, and lives in `localStorage` instead — see
+[Display modes](#display-modes).
 
 ---
 

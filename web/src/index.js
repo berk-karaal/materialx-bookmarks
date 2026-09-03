@@ -1,5 +1,6 @@
 import { fetchCollection, parseConfig } from "./config.js";
 import { applyFilters, orderTags, tagCounts } from "./filter.js";
+import { readPref, writePref } from "./prefs.js";
 import {
   buildShell,
   renderChips,
@@ -7,22 +8,39 @@ import {
   renderError,
   renderList,
   renderPagination,
+  renderViews,
 } from "./render.js";
 import { reflow } from "./reflow.js";
 import { createSearch } from "./search.js";
-import { readState, writeState } from "./state.js";
+import { parsePageSize, readState, writeState } from "./state.js";
 
 const DEBOUNCE_MS = 200;
 
+// The display mode is a personal preference and lives only in storage. The page size travels in
+// the URL as well, because it decides which bookmarks a given page number lands on.
+function initialDisplay(id, displays, fallback) {
+  return displays.length > 1 ? readPref(id, "view", displays, fallback) : fallback;
+}
+
+function initialSize(id, sizes, perPage) {
+  const stored = readPref(id, "size", sizes.map(String), null);
+  return stored === null ? perPage : parsePageSize(stored, perPage);
+}
+
 function mount(root, config, data) {
   const { labels, perPage, id, tagSorting, language } = config;
-  const nodes = buildShell(root, labels);
-  const search = createSearch(data.items);
+  const displays = config.displayOptions ?? [];
+  const sizes = config.perPageOptions ?? [];
 
-  let state = readState(id, window.location.search);
+  const nodes = buildShell(root, labels, { displayOptions: displays, pageSizeOptions: sizes });
+  const search = createSearch(data.items);
+  root.style.setProperty("--mxb-block-min", config.blockMinWidth);
+
+  let display = initialDisplay(id, displays, config.display);
+  let state = readState(id, window.location.search, initialSize(id, sizes, perPage));
 
   const persist = () => {
-    const query = writeState(id, state, window.location.search);
+    const query = writeState(id, state, window.location.search, perPage);
     window.history.replaceState(
       null,
       "",
@@ -31,18 +49,20 @@ function mount(root, config, data) {
   };
 
   const draw = () => {
-    const view = applyFilters(data.items, state, search, perPage);
+    const view = applyFilters(data.items, state, search, state.size);
     const counts = tagCounts(view.filtered, data.tags);
     state = { ...state, page: view.page };
 
     nodes.search.value = state.q;
     nodes.sort.setAttribute("aria-pressed", String(state.sort === "reversed"));
+    renderViews(nodes.views, display);
+    if (nodes.size) nodes.size.value = String(state.size);
     const order = orderTags(data.tags, counts, tagSorting, language);
     reflow(nodes.chips, () =>
       renderChips(nodes.chips, data.tags, counts, state.tags, labels, order),
     );
     renderCount(nodes.count, view.visible.length, view.total, labels);
-    renderList(nodes.list, view.visible, labels);
+    renderList(nodes.list, view.visible, labels, display);
     renderPagination(nodes.pagination, view.page, view.pageCount, labels);
   };
 
@@ -59,6 +79,22 @@ function mount(root, config, data) {
 
   nodes.sort.addEventListener("click", () => {
     state = { ...state, sort: state.sort === "reversed" ? "default" : "reversed", page: 1 };
+    persist();
+    draw();
+  });
+
+  nodes.views?.addEventListener("click", (event) => {
+    const button = event.target.closest(".mxb__view");
+    if (!button) return;
+    display = button.dataset.view;
+    writePref(id, "view", display);
+    draw();
+  });
+
+  nodes.size?.addEventListener("change", (event) => {
+    const size = parsePageSize(event.target.value, perPage);
+    writePref(id, "size", String(size));
+    state = { ...state, size, page: 1 };
     persist();
     draw();
   });

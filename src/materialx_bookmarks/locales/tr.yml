@@ -8,3 +8,9 @@ all_tags: Tümü
 sort_reverse: Sırayı ters çevir
 prev_page: Önceki
 next_page: Sonraki
+display_mode: Görünüm
+view_list: Liste görünümü
+view_blocks: Blok görünümü
+view_compact: Sıkışık görünüm
+page_size: Sayfa başına
+page_size_all: Tümü

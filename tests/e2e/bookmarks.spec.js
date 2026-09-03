@@ -129,3 +129,78 @@ test("a collection without nouns keeps saying bookmarks", async ({ page }) => {
   await expect(page.locator(".mxb__search")).toHaveAttribute("placeholder", "Search bookmarks");
   await expect(page.locator(".mxb__count")).toHaveText("2 of 6 bookmarks");
 });
+
+test("the display switcher redraws the list and outlives a reload", async ({ page }) => {
+  await page.goto("/index.html");
+
+  const list = page.locator(".mxb__list");
+  await expect(list).not.toHaveClass(/mxb__list--/);
+
+  await page.locator(".mxb__view[data-view='blocks']").click();
+  await expect(list).toHaveClass(/mxb__list--blocks/);
+  await expect(page.locator(".mxb__view[data-view='blocks']")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  // The display mode is a preference, not part of the shareable view.
+  await expect(page).not.toHaveURL(/reading\./);
+
+  await page.reload();
+  await expect(page.locator(".mxb__list")).toHaveClass(/mxb__list--blocks/);
+
+  await page.locator(".mxb__view[data-view='compact']").click();
+  await expect(page.locator(".mxb__list")).toHaveClass(/mxb__list--compact/);
+});
+
+test("two collections on one page remember their own display mode", async ({ page }) => {
+  await page.goto("/guides/pair/index.html");
+
+  const lists = page.locator(".mxb__list");
+  await expect(lists).toHaveCount(2);
+
+  await page.locator(".mxb").first().locator(".mxb__view[data-view='blocks']").click();
+
+  await expect(lists.first()).toHaveClass(/mxb__list--blocks/);
+  await expect(lists.last()).not.toHaveClass(/mxb__list--/);
+});
+
+test("the page size picker repaginates and travels in the url", async ({ page }) => {
+  await page.goto("/index.html");
+
+  const items = page.locator(".mxb__item");
+  const size = page.locator(".mxb__size");
+
+  await expect(items).toHaveCount(2);
+  await expect(size).toHaveValue("2");
+  await expect(page.locator(".mxb__sizefield")).toContainText("Per page");
+
+  await size.selectOption("4");
+  await expect(items).toHaveCount(4);
+  await expect(page.locator(".mxb__count")).toHaveText("4 of 6 bookmarks");
+  await expect(page).toHaveURL(/reading\.size=4/);
+
+  await size.selectOption("all");
+  await expect(items).toHaveCount(6);
+  await expect(page.locator(".mxb__page--number")).toHaveCount(1);
+  await expect(page).toHaveURL(/reading\.size=all/);
+
+  // Back to the author's own per_page, which is the default and so leaves the url.
+  await size.selectOption("2");
+  await expect(page).not.toHaveURL(/reading\.size/);
+});
+
+test("a shared link carries the page size", async ({ page }) => {
+  await page.goto("/index.html?reading.size=4&reading.page=2");
+
+  await expect(page.locator(".mxb__item")).toHaveCount(2);
+  await expect(page.locator(".mxb__size")).toHaveValue("4");
+  await expect(page.locator(".mxb__count")).toHaveText("2 of 6 bookmarks");
+});
+
+test("a collection with no page size options gets no picker", async ({ page }) => {
+  await page.goto("/projects/index.html");
+
+  await expect(page.locator(".mxb__size")).toHaveCount(0);
+  await expect(page.locator(".mxb__views")).toHaveCount(1);
+});
