@@ -203,6 +203,10 @@ collections:
     block_min_width: 14rem
 ```
 
+| `blocks` | `compact` |
+| :---: | :---: |
+| <img width="100%" alt="A two-column grid of bordered rounded cards, each with a bold title, a description, outlined link buttons and tag pills. The link rows align across each pair of cards." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/blocks.png"> | <img width="100%" alt="One row per bookmark: a bold title, a single-line description, then unlabelled link icons and tag pills aligned to the right edge." src="https://raw.githubusercontent.com/berk-karaal/materialx-bookmarks/main/.github/assets/compact.png"> |
+
 `display` is where a collection starts. Set `display_options` to narrow what the reader may choose,
 or to `[]` to fix the mode and hide the switcher entirely:
 
